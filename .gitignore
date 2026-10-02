@@ -1,0 +1,59 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.ilk
+*.log
+*.vspscc
+*.vssscc
+*.tmp
+*.csproj.user
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+
+# Logs
+Logs/
+*.log
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# npm packages
+node_modules/
+
+# Environment variables
+.env
+
+# Database files
+*.mdf
+*.ldf
+
+# Resharper
+_ReSharper.Caches/
+
+# Rider
+.idea/
+
+# AutoMapper license warning
+AutoMapper.License.xml
+
+# Custom files
+appsettings.Development.json
+
+# Include appsettings.json.example as a template
+!appsettings.json.example
+
+# Exclude sensitive appsettings.json
+appsettings.json

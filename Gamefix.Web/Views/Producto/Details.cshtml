@@ -1,0 +1,58 @@
+﻿@model Gamefix.Application.DTOs.ProductoDTO
+
+@{
+    ViewData["Title"] = "Detalle del producto";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h1 class="h3 mb-0">Detalle del producto</h1>
+        </div>
+
+        <div class="card-body">
+            <h2>@Model.Nombre</h2>
+
+            <p>
+                <strong>Descripción:</strong>
+                @Model.Descripcion
+            </p>
+
+            <p>
+                <strong>Categoría:</strong>
+                @Model.CategoriaProductoId
+            </p>
+
+            <p>
+                <strong>Marca:</strong>
+                @Model.Marca
+            </p>
+
+            <p>
+                <strong>Compatibilidad:</strong>
+                @Model.Compatibilidad
+            </p>
+
+            <p>
+                <strong>Precio:</strong>
+                ₡@Model.Precio.ToString("N2")
+            </p>
+
+            <p>
+                <strong>Existencia:</strong>
+                @Model.Existencia
+            </p>
+
+            <p>
+                <strong>Stock mínimo:</strong>
+                @Model.StockMinimo
+            </p>
+
+            <a asp-controller="Producto"
+               asp-action="Index"
+               class="btn btn-secondary">
+                Regresar
+            </a>
+        </div>
+    </div>
+</div>
