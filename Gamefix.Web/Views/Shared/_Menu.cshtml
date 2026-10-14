@@ -7,8 +7,8 @@
 
             <img src="~/images/logo.png"
                  alt="Logo de Gamefix"
-                 width="50"
-                 height="36"
+                 width="70"
+                 height="38"
                  class="me-2" />
 
             <span>Gamefix</span>
@@ -47,7 +47,7 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle"
-                       href="#"
+                       href="despues"
                        role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false">
@@ -59,7 +59,7 @@
                         <li>
                             <a class="dropdown-item"
                                asp-controller="Producto"
-                               asp-action="Index">
+                               asp-action="IndexAdmin">
                                 <i class="bi bi-box-seam"></i>
                                 Productos
                             </a>
@@ -80,10 +80,18 @@
                     <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item"
-                               asp-controller="Producto"
-                               asp-action="Enviar">
-                                <i class="bi bi-send"></i>
-                                Enviar mensaje
+                               asp-controller="Factura"
+                               asp-action="Index">
+                                <i class="bi bi-receipt"></i>
+                                Facturación
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Reserva"
+                               asp-action="Index">
+                                <i class="bi bi-calendar-check"></i>
+                                Reservas
                             </a>
                         </li>
                     </ul>

@@ -10,8 +10,7 @@ namespace Gamefix.Infraestructure.Repository.Interfaces
     public interface IRepositoryProducto
     {
         Task<ICollection<Producto>> ListAsync();
-        Task<Producto> FindByIdAsync(int id);
+        Task<Producto?> FindByIdAsync(int id);
     }
 }
-
 

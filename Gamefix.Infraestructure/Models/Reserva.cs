@@ -29,6 +29,8 @@ public partial class Reserva
 
     public bool FueReparadaAnteriormente { get; set; }
 
+    public bool HaceRuidoLectora { get; set; }
+
     public string? ObservacionesCliente { get; set; }
 
     public string? DiagnosticoEncargado { get; set; }

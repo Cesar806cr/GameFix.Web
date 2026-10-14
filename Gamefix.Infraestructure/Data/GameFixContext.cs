@@ -265,6 +265,7 @@ public partial class GameFixContext : DbContext
             entity.Property(e => e.FechaRegistro)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.HaceRuidoLectora).HasDefaultValue(false);
             entity.Property(e => e.MotivoReprogramacion).HasMaxLength(500);
             entity.Property(e => e.ObservacionesCliente).HasMaxLength(1000);
             entity.Property(e => e.ProblemaReportado).HasMaxLength(1000);
@@ -367,6 +368,7 @@ public partial class GameFixContext : DbContext
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.FechaUltimoAcceso).HasPrecision(0);
+            entity.Property(e => e.Identificacion).HasMaxLength(30);
             entity.Property(e => e.Nombre).HasMaxLength(120);
             entity.Property(e => e.Telefono).HasMaxLength(25);
 

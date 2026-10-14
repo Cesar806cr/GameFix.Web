@@ -17,17 +17,23 @@ builder.Services.AddControllersWithViews();
 
 // Configurar Repository
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
+builder.Services.AddTransient<IRepositoryFactura, RepositoryFactura>();
+builder.Services.AddTransient<IRepositoryReserva, RepositoryReserva>();
 
 // Configurar Services
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
+builder.Services.AddTransient<IServiceFactura, ServiceFactura>();
+builder.Services.AddTransient<IServiceReserva, ServiceReserva>();
 
 // Configurar AutoMapper
 builder.Services.AddAutoMapper(
     config => { },
-    typeof(ProductoProfile)
+    typeof(ProductoProfile),
+    typeof(FacturaProfile),
+    typeof(ReservaProfile)
 );
 
-// Configurar conexión a la base de datos SQL
+// Configurar conexion a la base de datos SQL
 builder.Services.AddDbContext<GameFixContext>(options =>
 {
     options.UseSqlServer(
@@ -40,13 +46,13 @@ builder.Services.AddDbContext<GameFixContext>(options =>
     }
 });
 
-// Configuración de Serilog
+// Configuraciin de Serilog
 var logger = new LoggerConfiguration()
-    // Limitar la información de depuración de Microsoft
+    // Limitar la informaciï¿½n de depuraciï¿½n de Microsoft
     .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
     .Enrich.FromLogContext()
 
-    // Mostrar información en la consola
+    // Mostrar informaciin en la consola
     .WriteTo.Console(LogEventLevel.Information)
 
     // Logs informativos
@@ -59,7 +65,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs de depuración
+    // Logs de depuracion
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug)
         .WriteTo.File(
@@ -89,7 +95,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs críticos
+    // Logs criticos
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal)
         .WriteTo.File(

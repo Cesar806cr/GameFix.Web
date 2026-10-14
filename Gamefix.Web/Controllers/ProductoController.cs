@@ -13,7 +13,6 @@ namespace Gamefix.Web.Controllers
             _serviceProducto = serviceProducto;
         }
 
-        // GET: /Producto
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -30,7 +29,16 @@ namespace Gamefix.Web.Controllers
             return View(collection);
         }
 
-        // GET: /Producto/Details/1
+        [HttpGet]
+        public async Task<IActionResult> IndexAdmin()
+        {
+            var collection = await _serviceProducto.ListAsync();
+
+            ViewData["Title"] = "Mantenimiento de productos";
+
+            return View(collection);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -44,16 +52,5 @@ namespace Gamefix.Web.Controllers
             return View(producto);
         }
 
-        // GET: /Producto/Enviar
-        [HttpGet]
-        public IActionResult Enviar()
-        {
-            TempData["Mensaje"] = SweetAlertHelper.Mensaje(
-                "Producto",
-                "Mensaje enviado correctamente",
-                SweetAlertMessageType.success);
-
-            return RedirectToAction(nameof(Index));
-        }
     }
 }

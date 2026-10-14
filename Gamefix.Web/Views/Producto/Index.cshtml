@@ -1,105 +1,47 @@
-﻿@model IEnumerable<Gamefix.Application.DTOs.ProductoDTO>
+@model IEnumerable<Gamefix.Application.DTOs.ProductoDTO>
 
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = "Catálogo de productos";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="mb-4">Catálogo de productos</h1>
 
-<p>
-    <a asp-controller="Producto"
-       asp-action="Create"
-       class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i>
-        Crear producto
-    </a>
-</p>
+<section>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    @if (item.Imagen is not null && item.Imagen.Length > 0)
+                    {
+                        <img class="card-img-top product-image"
+                             src="data:@item.TipoImagen;base64,@Convert.ToBase64String(item.Imagen)"
+                             alt="@item.Nombre" />
+                    }
+                    else
+                    {
+                        <div class="product-image product-image-placeholder">
+                            <i class="bi bi-controller fs-1"></i>
+                            <span>Imagen pendiente</span>
+                        </div>
+                    }
 
-<div class="row mb-3">
-    <div class="col-md-12">
-        <a class="btn btn-success"
-           asp-controller="Producto"
-           asp-action="Enviar">
-            <i class="bi bi-send"></i>
-            Enviar
-        </a>
-    </div>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductoId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Marca)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Precio)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Existencia)
-                </th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProductoId)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Marca)
-                    </td>
-
-                    <td>
-                        @item.Precio.ToString("C")
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Existencia)
-                    </td>
-
-                    <td>
-                        <a class="btn btn-warning btn-sm"
-                           asp-controller="Producto"
-                           asp-action="Edit"
-                           asp-route-id="@item.ProductoId">
-                            <i class="bi bi-pencil"></i>
-                            Editar
-                        </a>
-
-                        <a class="btn btn-info btn-sm"
-                           asp-controller="Producto"
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Nombre</h5>
+                        <p class="card-text mb-1">@item.CategoriaNombre</p>
+                        <p class="card-text mb-1">@item.Marca</p>
+                        <p class="card-text fw-bold">@item.Precio.ToString("C")</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a class="btn btn-primary"
                            asp-action="Details"
                            asp-route-id="@item.ProductoId">
                             <i class="bi bi-eye"></i>
-                            Detalles
+                            Detalle
                         </a>
-
-                        <a class="btn btn-danger btn-sm"
-                           asp-controller="Producto"
-                           asp-action="Delete"
-                           asp-route-id="@item.ProductoId">
-                            <i class="bi bi-trash"></i>
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

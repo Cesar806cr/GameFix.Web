@@ -1,0 +1,44 @@
+@model IEnumerable<Gamefix.Application.DTOs.ProductoDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de productos";
+}
+
+<h1>Mantenimiento de productos</h1>
+
+<p class="text-muted">
+    Listado de productos registrados para consulta y mantenimiento.
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead>
+            <tr class="table-primary">
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Existencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.CategoriaNombre</td>
+                    <td>@item.Precio.ToString("C")</td>
+                    <td>@item.Existencia</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@item.ProductoId"
+                           class="btn btn-info btn-sm">
+                            <i class="bi bi-zoom-in"></i>
+                            Detalle
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,43 @@
+@model IEnumerable<Gamefix.Application.DTOs.ReservaDTO>
+
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<h1>Historial de reservas</h1>
+
+<table class="table table-hover align-middle mt-4">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Fecha y hora</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CodigoReserva</td>
+                <td>@item.FechaHoraInicio.ToString("dd-MM-yyyy HH:mm")</td>
+                <td>@item.ClienteNombre</td>
+                <td>
+                    <span class="badge reservation-status"
+                          style="background-color:@item.EstadoColor">
+                        @item.EstadoNombre
+                    </span>
+                </td>
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.ReservaId"
+                       class="btn btn-info btn-sm">
+                        <i class="bi bi-eye"></i>
+                        Detalle
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

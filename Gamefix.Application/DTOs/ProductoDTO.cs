@@ -13,6 +13,8 @@ namespace Gamefix.Application.DTOs
 
             public int CategoriaProductoId { get; set; }
 
+            public string CategoriaNombre { get; set; } = string.Empty;
+
             public string Nombre { get; set; } = string.Empty; 
 
             public string? Descripcion { get; set; }
@@ -36,5 +38,4 @@ namespace Gamefix.Application.DTOs
             public bool Activo { get; set; }
         }
     }
-
 

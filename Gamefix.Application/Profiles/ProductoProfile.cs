@@ -13,7 +13,10 @@ namespace Gamefix.Application.Profiles
     {
         public ProductoProfile()
         {
-            CreateMap<ProductoDTO, Producto>().ReverseMap(); 
+            CreateMap<Producto, ProductoDTO>()
+                .ForMember(dest => dest.CategoriaNombre,
+                    opt => opt.MapFrom(src => src.CategoriaProducto.Nombre));
+            CreateMap<ProductoDTO, Producto>().ReverseMap();
         }
     }
 }

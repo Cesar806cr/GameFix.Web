@@ -19,20 +19,22 @@ namespace Gamefix.Infraestructure.Repository.Implementations
             _context = context;
         }
 
-        public async Task<Producto> FindByIdAsync(int id)
+        public async Task<Producto?> FindByIdAsync(int id)
         {
-            var producto = await _context.Set<Producto>().FindAsync(id);
-            if (producto == null)
-            {
-                throw new KeyNotFoundException($"No se encontró un producto con el ID {id}.");
-            }
-            return producto;
+            return await _context.Set<Producto>()
+                .Include(producto => producto.CategoriaProducto)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(producto => producto.ProductoId == id);
         }
 
         public async Task<ICollection<Producto>> ListAsync()
         {
-            var collection = await _context.Set<Producto>().ToListAsync();
-            return collection;
+            return await _context.Set<Producto>()
+                .Include(producto => producto.CategoriaProducto)
+                .Where(producto => producto.Activo)
+                .OrderBy(producto => producto.Nombre)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

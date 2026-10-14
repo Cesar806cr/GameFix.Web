@@ -1,0 +1,77 @@
+@model Gamefix.Application.DTOs.FacturaDTO
+
+@{
+    ViewData["Title"] = "Detalle de factura";
+}
+
+<div class="invoice-container">
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h1>GameFix</h1>
+            <p class="mb-0">Comprobante de facturación</p>
+        </div>
+        <div class="text-end">
+            <h4>@Model.NumeroFactura</h4>
+            <p class="mb-0">@Model.FechaEmision.ToString("dd-MM-yyyy HH:mm")</p>
+            <span class="badge bg-success">@Model.EstadoFactura</span>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Cliente</h5>
+            <p class="mb-1"><strong>Nombre:</strong> @Model.ClienteNombre</p>
+            <p class="mb-1"><strong>Identificación:</strong> @Model.ClienteIdentificacion</p>
+        </div>
+        <div class="col-md-6">
+            <h5>Sucursal</h5>
+            <p class="mb-1"><strong>Nombre:</strong> @Model.SucursalNombre</p>
+            <p class="mb-1"><strong>Teléfono:</strong> @Model.SucursalTelefono</p>
+            <p class="mb-1"><strong>Dirección:</strong> @Model.SucursalDireccion</p>
+            <p><strong>Correo:</strong> @Model.SucursalCorreo</p>
+        </div>
+    </div>
+
+    <h5 class="mt-4">Detalle</h5>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th class="text-end">Cantidad</th>
+                <th class="text-end">Precio</th>
+                <th class="text-end">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Detalles)
+            {
+                <tr>
+                    <td>@item.Descripcion</td>
+                    <td class="text-end">@item.Cantidad</td>
+                    <td class="text-end">@item.PrecioUnitario.ToString("C")</td>
+                    <td class="text-end">@item.Subtotal.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row justify-content-end">
+        <div class="col-md-5">
+            <dl class="row">
+                <dt class="col-7">Subtotal</dt>
+                <dd class="col-5 text-end">@Model.Subtotal.ToString("C")</dd>
+                <dt class="col-7">Impuesto (@Model.PorcentajeImpuesto.ToString("N0")%)</dt>
+                <dd class="col-5 text-end">@Model.Impuesto.ToString("C")</dd>
+                <dt class="col-7 fs-5">Total a pagar</dt>
+                <dd class="col-5 text-end fs-5 fw-bold">@Model.Total.ToString("C")</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-info">
+    <i class="bi bi-arrow-return-left"></i>
+    Regresar al listado
+</a>

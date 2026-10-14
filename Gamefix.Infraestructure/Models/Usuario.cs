@@ -13,6 +13,8 @@ public partial class Usuario
 
     public string Nombre { get; set; } = null!;
 
+    public string? Identificacion { get; set; }
+
     public string Telefono { get; set; } = null!;
 
     public string CorreoElectronico { get; set; } = null!;

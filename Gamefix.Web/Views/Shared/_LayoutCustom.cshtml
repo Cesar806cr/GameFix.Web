@@ -68,13 +68,12 @@
                                 </span>
                             </a>
 
-                            <ul class="collapse show nav flex-column ms-1"
+                            <ul class="collapse nav flex-column ms-1"
                                 id="submenuMantenimiento"
                                 data-bs-parent="#menu">
-
                                 <li class="w-100">
                                     <a asp-controller="Producto"
-                                       asp-action="Index"
+                                       asp-action="IndexAdmin"
                                        class="nav-link text-white px-0">
 
                                         <i class="bi bi-box-seam"></i>
@@ -103,13 +102,25 @@
                                 data-bs-parent="#menu">
 
                                 <li class="w-100">
-                                    <a asp-controller="Producto"
-                                       asp-action="Enviar"
+                                    <a asp-controller="Factura"
+                                       asp-action="Index"
                                        class="nav-link text-white px-0">
 
-                                        <i class="bi bi-send"></i>
+                                        <i class="bi bi-receipt"></i>
                                         <span class="d-none d-sm-inline ms-1">
-                                            Enviar
+                                            Facturación
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li class="w-100">
+                                    <a asp-controller="Reserva"
+                                       asp-action="Index"
+                                       class="nav-link text-white px-0">
+
+                                        <i class="bi bi-calendar-check"></i>
+                                        <span class="d-none d-sm-inline ms-1">
+                                            Reservas
                                         </span>
                                     </a>
                                 </li>
@@ -151,11 +162,7 @@
                             aria-labelledby="dropdownUser">
 
                             <li>
-                                <a class="dropdown-item"
-                                   asp-controller="Home"
-                                   asp-action="Privacy">
-                                    Privacidad
-                                </a>
+                                <span class="dropdown-item">Salir</span>
                             </li>
                         </ul>
                     </div>
