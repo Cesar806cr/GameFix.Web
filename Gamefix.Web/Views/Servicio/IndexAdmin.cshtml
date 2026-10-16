@@ -1,0 +1,73 @@
+@model IEnumerable<Gamefix.Application.DTOs.ServicioDTO>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Mantenimiento de servicios";
+}
+
+<h1>Mantenimiento de servicios</h1>
+
+<p class="text-muted">
+    Listado de servicios técnicos registrados para consulta y mantenimiento.
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead>
+            <tr class="table-primary">
+                <th>Nombre</th>
+                <th>Consolas compatibles</th>
+                <th>Precio</th>
+                <th>Duración</th>
+                <th>Dificultad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.ConsolaCompatible</td>
+                    <td>₡@item.Precio.ToString("#,##0")</td>
+                    <td>
+                        @(item.DuracionMinutos % 60 == 0
+                            ? $"{item.DuracionMinutos / 60} {(item.DuracionMinutos / 60 == 1 ? "hora" : "horas")}"
+                            : $"{item.DuracionMinutos} minutos")
+                    </td>
+                    <td>@item.NivelDificultad</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-fill"></i>
+                            Editar
+                        </button>
+                        <a asp-action="Details"
+                           asp-route-id="@item.ServicioId"
+                           class="btn btn-info btn-sm">
+                            <i class="bi bi-zoom-in"></i>
+                            Detalle
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6">
+                    <div class="d-flex justify-content-end">
+                        @Html.PagedListPager((IPagedList)Model, page =>
+                                 Url.Action("IndexAdmin", new { page }), new PagedListRenderOptions
+                        {
+                            Display = PagedListDisplayMode.Always,
+                            MaximumPageNumbersToDisplay = 5,
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" }
+                        })
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

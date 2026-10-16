@@ -35,10 +35,10 @@
             <dt class="col-sm-4">Compatibilidad</dt>
             <dd class="col-sm-8">@Model.Compatibilidad</dd>
             <dt class="col-sm-4">Precio</dt>
-            <dd class="col-sm-8">@Model.Precio.ToString("C")</dd>
+            <dd class="col-sm-8">₡@Model.Precio.ToString("#,##0")</dd>
             <dt class="col-sm-4">Existencia</dt>
             <dd class="col-sm-8">@Model.Existencia</dd>
-            <dt class="col-sm-4">Stock mínimo</dt>
+            <dt class="col-sm-4">Existencia mínima</dt>
             <dd class="col-sm-8">@Model.StockMinimo</dd>
         </dl>
     </div>

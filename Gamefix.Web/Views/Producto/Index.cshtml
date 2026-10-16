@@ -29,8 +29,8 @@
                     <div class="card-body">
                         <h5 class="card-title">@item.Nombre</h5>
                         <p class="card-text mb-1">@item.CategoriaNombre</p>
-                        <p class="card-text mb-1">@item.Marca</p>
-                        <p class="card-text fw-bold">@item.Precio.ToString("C")</p>
+                        <p class="card-text mb-1 text-end">@item.Marca</p>
+                        <p class="card-text fw-bold text-end">₡@item.Precio.ToString("#,##0")</p>
                     </div>
                     <div class="card-footer bg-transparent border-0">
                         <a class="btn btn-primary"

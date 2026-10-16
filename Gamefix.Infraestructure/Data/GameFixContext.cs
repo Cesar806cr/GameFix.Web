@@ -326,7 +326,9 @@ public partial class GameFixContext : DbContext
                 .HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.NivelDificultad).HasMaxLength(20);
             entity.Property(e => e.Nombre).HasMaxLength(120);
+            entity.Property(e => e.NombreImagen).HasMaxLength(255);
             entity.Property(e => e.Precio).HasColumnType("decimal(12, 2)");
+            entity.Property(e => e.TipoImagen).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Sucursal>(entity =>

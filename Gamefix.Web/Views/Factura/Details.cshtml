@@ -49,9 +49,9 @@
             {
                 <tr>
                     <td>@item.Descripcion</td>
-                    <td class="text-end">@item.Cantidad</td>
-                    <td class="text-end">@item.PrecioUnitario.ToString("C")</td>
-                    <td class="text-end">@item.Subtotal.ToString("C")</td>
+                    <td class="text-end">@item.Cantidad.ToString("#,##0.##")</td>
+                    <td class="text-end">₡@item.PrecioUnitario.ToString("#,##0")</td>
+                    <td class="text-end">₡@item.Subtotal.ToString("#,##0")</td>
                 </tr>
             }
         </tbody>
@@ -61,11 +61,11 @@
         <div class="col-md-5">
             <dl class="row">
                 <dt class="col-7">Subtotal</dt>
-                <dd class="col-5 text-end">@Model.Subtotal.ToString("C")</dd>
+                <dd class="col-5 text-end">₡@Model.Subtotal.ToString("#,##0")</dd>
                 <dt class="col-7">Impuesto (@Model.PorcentajeImpuesto.ToString("N0")%)</dt>
-                <dd class="col-5 text-end">@Model.Impuesto.ToString("C")</dd>
+                <dd class="col-5 text-end">₡@Model.Impuesto.ToString("#,##0")</dd>
                 <dt class="col-7 fs-5">Total a pagar</dt>
-                <dd class="col-5 text-end fs-5 fw-bold">@Model.Total.ToString("C")</dd>
+                <dd class="col-5 text-end fs-5 fw-bold">₡@Model.Total.ToString("#,##0")</dd>
             </dl>
         </div>
     </div>

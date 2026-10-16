@@ -45,6 +45,16 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link"
+                       asp-controller="Servicio"
+                       asp-action="Index">
+                        <i class="bi bi-tools"></i>
+                        Servicios técnicos
+                    </a>
+                </li>
+
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle"
                        href="despues"
@@ -62,6 +72,14 @@
                                asp-action="IndexAdmin">
                                 <i class="bi bi-box-seam"></i>
                                 Productos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Servicio"
+                               asp-action="IndexAdmin">
+                                <i class="bi bi-tools"></i>
+                                Servicios técnicos
                             </a>
                         </li>
                     </ul>

@@ -1,4 +1,6 @@
 @model IEnumerable<Gamefix.Application.DTOs.FacturaDTO>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Facturación";
@@ -23,7 +25,7 @@
                 <td>@item.NumeroFactura</td>
                 <td>@item.FechaEmision.ToString("dd-MM-yyyy")</td>
                 <td>@item.ClienteNombre</td>
-                <td>@item.Total.ToString("C")</td>
+                <td>₡@item.Total.ToString("#,##0")</td>
                 <td>
                     <a asp-action="Details"
                        asp-route-id="@item.FacturaId"
@@ -36,3 +38,14 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-end">
+    @Html.PagedListPager((IPagedList)Model, page =>
+             Url.Action("Index", new { page }), new PagedListRenderOptions
+    {
+        Display = PagedListDisplayMode.Always,
+        MaximumPageNumbersToDisplay = 5,
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>

@@ -1,5 +1,6 @@
 ﻿using Gamefix.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList.Extensions;
 using Gamefix.Web.Util;
 
 namespace Gamefix.Web.Controllers
@@ -30,13 +31,13 @@ namespace Gamefix.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAdmin()
+        public async Task<IActionResult> IndexAdmin(int? page)
         {
             var collection = await _serviceProducto.ListAsync();
 
             ViewData["Title"] = "Mantenimiento de productos";
 
-            return View(collection);
+            return View(collection.ToPagedList(page ?? 1, 5));
         }
 
         [HttpGet]

@@ -1,0 +1,51 @@
+@model IEnumerable<Gamefix.Application.DTOs.ServicioDTO>
+
+@{
+    ViewData["Title"] = "Servicios técnicos";
+}
+
+<h1 class="mb-4">Servicios técnicos ofrecidos</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                @if (item.Imagen is not null && item.Imagen.Length > 0)
+                {
+                    <img class="card-img-top product-image"
+                         src="data:@item.TipoImagen;base64,@Convert.ToBase64String(item.Imagen)"
+                         alt="@item.Nombre" />
+                }
+                else
+                {
+                    <div class="product-image product-image-placeholder">
+                        <i class="bi bi-tools fs-1"></i>
+                        <span>Servicio técnico</span>
+                    </div>
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">@item.Descripcion</p>
+                    <p class="card-text mb-1"><strong>Consolas:</strong> @item.ConsolaCompatible</p>
+                    <p class="card-text mb-1"><strong>Dificultad:</strong> @item.NivelDificultad</p>
+                    <p class="card-text mb-1">
+                        <strong>Duración:</strong>
+                        @(item.DuracionMinutos % 60 == 0
+                            ? $"{item.DuracionMinutos / 60} {(item.DuracionMinutos / 60 == 1 ? "hora" : "horas")}"
+                            : $"{item.DuracionMinutos} minutos")
+                    </p>
+                    <p class="card-text fw-bold">₡@item.Precio.ToString("#,##0")</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a class="btn btn-primary"
+                       asp-action="Details"
+                       asp-route-id="@item.ServicioId">
+                        <i class="bi bi-eye"></i>
+                        Detalle
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -23,6 +23,12 @@ public partial class Servicio
 
     public int GarantiaDias { get; set; }
 
+    public byte[]? Imagen { get; set; }
+
+    public string? NombreImagen { get; set; }
+
+    public string? TipoImagen { get; set; }
+
     public bool Activo { get; set; }
 
     public DateTime FechaRegistro { get; set; }

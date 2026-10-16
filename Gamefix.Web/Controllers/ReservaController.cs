@@ -1,5 +1,6 @@
 using Gamefix.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList.Extensions;
 
 namespace Gamefix.Web.Controllers;
 
@@ -13,10 +14,10 @@ public class ReservaController : Controller
         _serviceReserva = serviceReserva;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? page)
     {
         var reservas = await _serviceReserva.ListBySucursalAsync(SucursalEncargadoId);
-        return View(reservas);
+        return View(reservas.ToPagedList(page ?? 1, 5));
     }
 
     public async Task<IActionResult> Details(int id)

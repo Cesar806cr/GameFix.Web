@@ -1,0 +1,54 @@
+@model Gamefix.Application.DTOs.ServicioDTO
+
+@{
+    ViewData["Title"] = "Detalle del servicio";
+}
+
+<h1>Detalle del servicio</h1>
+
+<div class="row g-4 mt-1">
+    <div class="col-md-5">
+        @if (Model.Imagen is not null && Model.Imagen.Length > 0)
+        {
+            <img class="img-fluid rounded shadow-sm product-detail-image"
+                 src="data:@Model.TipoImagen;base64,@Convert.ToBase64String(Model.Imagen)"
+                 alt="@Model.Nombre" />
+        }
+        else
+        {
+            <div class="product-detail-image product-image-placeholder rounded shadow-sm">
+                <i class="bi bi-tools fs-1"></i>
+                <span>Servicio técnico</span>
+            </div>
+        }
+    </div>
+    <div class="col-md-7">
+        <h2>@Model.Nombre</h2>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-5">Descripción</dt>
+            <dd class="col-sm-7">@Model.Descripcion</dd>
+            <dt class="col-sm-5">Precio</dt>
+            <dd class="col-sm-7">₡@Model.Precio.ToString("#,##0")</dd>
+            <dt class="col-sm-5">Duración estimada</dt>
+            <dd class="col-sm-7">
+                @(Model.DuracionMinutos % 60 == 0
+                    ? $"{Model.DuracionMinutos / 60} {(Model.DuracionMinutos / 60 == 1 ? "hora" : "horas")}"
+                    : $"{Model.DuracionMinutos} minutos")
+            </dd>
+            <dt class="col-sm-5">Consolas compatibles</dt>
+            <dd class="col-sm-7">@Model.ConsolaCompatible</dd>
+            <dt class="col-sm-5">Nivel de dificultad</dt>
+            <dd class="col-sm-7">@Model.NivelDificultad</dd>
+            <dt class="col-sm-5">Requiere diagnóstico</dt>
+            <dd class="col-sm-7">@(Model.RequiereDiagnostico ? "Sí" : "No")</dd>
+            <dt class="col-sm-5">Garantía</dt>
+            <dd class="col-sm-7">@Model.GarantiaDias días</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-info mt-3">
+    <i class="bi bi-arrow-return-left"></i>
+    Regresar al listado
+</a>

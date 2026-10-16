@@ -6,6 +6,11 @@
 
     <title>@ViewData["Title"] - Gamefix</title>
 
+    <link rel="icon"
+          type="image/png"
+          href="~/favicon.png"
+          asp-append-version="true" />
+
     @* Tema Cyborg *@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/cyborg/bootstrap.min.css" />
@@ -19,23 +24,27 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 </head>
 
-<body>
-    <div class="container-fluid">
-        <div class="row flex-nowrap min-vh-100">
+<body class="d-flex flex-column min-vh-100">
+    <div class="container-fluid flex-grow-1 d-flex flex-column">
+        <div class="row flex-nowrap flex-grow-1">
 
             @* Menú lateral *@
             <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-black">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white h-100">
 
                     @* Logo *@
                     <a asp-controller="Home"
                        asp-action="Index"
-                       class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                       class="d-flex flex-column align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none w-100">
 
-                        <i class="bi bi-controller fs-4"></i>
-                        <span class="fs-5 d-none d-sm-inline ms-2">
+                        <span class="fs-5 d-none d-sm-inline mb-2">
                             Gamefix
                         </span>
+                        <img src="~/images/logo.png"
+                             alt="Logo de GameFix"
+                             width="130"
+                             height="75"
+                             class="img-fluid object-fit-contain" />
                     </a>
 
                     <hr class="w-100" />
@@ -52,6 +61,32 @@
                                 <i class="fs-4 bi-house"></i>
                                 <span class="ms-1 d-none d-sm-inline">
                                     Inicio
+                                </span>
+                            </a>
+                        </li>
+
+                        @* Servicios técnicos ofrecidos *@
+                        <li class="nav-item w-100">
+                            <a asp-controller="Servicio"
+                               asp-action="Index"
+                               class="nav-link text-white px-0 align-middle">
+
+                                <i class="fs-4 bi-tools"></i>
+                                <span class="ms-1 d-none d-sm-inline">
+                                    Servicios técnicos
+                                </span>
+                            </a>
+                        </li>
+
+                        @* Productos ofrecidos *@
+                        <li class="nav-item w-100">
+                            <a asp-controller="Producto"
+                               asp-action="Index"
+                               class="nav-link text-white px-0 align-middle">
+
+                                <i class="fs-4 bi-box-seam"></i>
+                                <span class="ms-1 d-none d-sm-inline">
+                                    Productos
                                 </span>
                             </a>
                         </li>
@@ -80,6 +115,14 @@
                                         <span class="d-none d-sm-inline ms-1">
                                             Productos
                                         </span>
+                                    </a>
+                                </li>
+                                <li class="w-100">
+                                    <a asp-controller="Servicio"
+                                       asp-action="IndexAdmin"
+                                       class="nav-link text-white px-0">
+                                        <i class="bi bi-tools"></i>
+                                        <span class="d-none d-sm-inline ms-1">Servicios</span>
                                     </a>
                                 </li>
                             </ul>
@@ -154,7 +197,7 @@
                             <i class="bi bi-person-circle fs-4"></i>
 
                             <span class="d-none d-sm-inline mx-2">
-                                Usuario
+                                César Valenciano
                             </span>
                         </a>
 
@@ -177,6 +220,18 @@
             </div>
         </div>
     </div>
+
+    <footer class="mt-auto bg-dark text-light border-top py-3">
+        <div class="container">
+            &copy; @DateTime.Now.Year - Gamefix -
+            <a class="text-info"
+               asp-controller="Home"
+               asp-action="Privacy">
+                Privacidad
+            </a>
+            <span class="ms-2">UTN-ISW711 - César Valenciano</span>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 

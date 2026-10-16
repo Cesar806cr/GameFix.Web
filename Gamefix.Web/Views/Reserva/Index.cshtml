@@ -1,4 +1,6 @@
 @model IEnumerable<Gamefix.Application.DTOs.ReservaDTO>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Reservas";
@@ -10,7 +12,7 @@
     <thead>
         <tr>
             <th>Código</th>
-            <th>Fecha y hora</th>
+            <th>Fecha y Hora</th>
             <th>Cliente</th>
             <th>Estado</th>
             <th></th>
@@ -41,3 +43,14 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-end">
+    @Html.PagedListPager((IPagedList)Model, page =>
+             Url.Action("Index", new { page }), new PagedListRenderOptions
+    {
+        Display = PagedListDisplayMode.Always,
+        MaximumPageNumbersToDisplay = 5,
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>

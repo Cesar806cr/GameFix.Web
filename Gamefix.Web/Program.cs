@@ -19,18 +19,21 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryFactura, RepositoryFactura>();
 builder.Services.AddTransient<IRepositoryReserva, RepositoryReserva>();
+builder.Services.AddTransient<IRepositoryServicio, RepositoryServicio>();
 
 // Configurar Services
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
 builder.Services.AddTransient<IServiceFactura, ServiceFactura>();
 builder.Services.AddTransient<IServiceReserva, ServiceReserva>();
+builder.Services.AddTransient<IServiceServicio, ServiceServicio>();
 
 // Configurar AutoMapper
 builder.Services.AddAutoMapper(
     config => { },
     typeof(ProductoProfile),
     typeof(FacturaProfile),
-    typeof(ReservaProfile)
+    typeof(ReservaProfile),
+    typeof(ServicioProfile)
 );
 
 // Configurar conexion a la base de datos SQL
@@ -134,7 +137,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// Activar Antiforgery
+// Activar Antiforgery para proteger contra ataques CSRF (Cross-Site Request Forgery)
 app.UseAntiforgery();
 
 app.MapStaticAssets();
