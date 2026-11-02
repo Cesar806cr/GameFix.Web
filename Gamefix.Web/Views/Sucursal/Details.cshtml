@@ -1,0 +1,16 @@
+@model Gamefix.Application.DTOs.SucursalDTO
+@{
+    ViewData["Title"] = "Detalle de sucursal";
+}
+<h1>Detalle</h1>
+<h4>@Model.Nombre</h4>
+<hr />
+<dl class="row">
+    <dt class="col-sm-3">Descripción</dt><dd class="col-sm-9">@Model.Descripcion</dd>
+    <dt class="col-sm-3">Teléfono</dt><dd class="col-sm-9">@Model.Telefono</dd>
+    <dt class="col-sm-3">Dirección</dt><dd class="col-sm-9">@Model.DireccionExacta</dd>
+    <dt class="col-sm-3">Correo</dt><dd class="col-sm-9">@Model.CorreoElectronico</dd>
+    <dt class="col-sm-3">Estado</dt><dd class="col-sm-9">@(Model.Activa ? "Activa" : "Inactiva")</dd>
+    <dt class="col-sm-3">Encargados</dt><dd class="col-sm-9">@(Model.EncargadosAsignados.Count == 0 ? "Sin encargados" : string.Join(", ", Model.EncargadosAsignados.Select(x => x.Nombre)))</dd>
+</dl>
+<a asp-action="Index" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a>

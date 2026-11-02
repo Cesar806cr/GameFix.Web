@@ -26,4 +26,18 @@ public class ServiceServicio : IServiceServicio
         var servicio = await _repository.FindByIdAsync(id);
         return servicio == null ? null : _mapper.Map<ServicioDTO>(servicio);
     }
+
+    public async Task AddAsync(ServicioDTO dto)
+    {
+        var entity = _mapper.Map<Gamefix.Infraestructure.Models.Servicio>(dto);
+        await _repository.AddAsync(entity);
+    }
+
+    public async Task UpdateAsync(ServicioDTO dto)
+    {
+        var entity = await _repository.FindByIdAsync(dto.ServicioId)
+            ?? throw new KeyNotFoundException("El servicio no existe.");
+        _mapper.Map(dto, entity);
+        await _repository.UpdateAsync(entity);
+    }
 }

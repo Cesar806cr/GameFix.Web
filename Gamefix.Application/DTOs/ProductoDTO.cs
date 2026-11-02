@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Gamefix.Application.DTOs
 {
@@ -15,18 +11,25 @@ namespace Gamefix.Application.DTOs
 
             public string CategoriaNombre { get; set; } = string.Empty;
 
-            public string Nombre { get; set; } = string.Empty; 
+            [Required, StringLength(120, MinimumLength = 2)]
+            public string Nombre { get; set; } = string.Empty;
 
+            [StringLength(500)]
             public string? Descripcion { get; set; }
 
+            [StringLength(100)]
             public string? Marca { get; set; }
 
+            [StringLength(200)]
             public string? Compatibilidad { get; set; }
 
+            [Range(0, 999999999)]
             public decimal Precio { get; set; }
 
+            [Range(0, int.MaxValue)]
             public int Existencia { get; set; }
 
+            [Range(0, int.MaxValue)]
             public int StockMinimo { get; set; }
 
             public byte[]? Imagen { get; set; }
@@ -38,4 +41,3 @@ namespace Gamefix.Application.DTOs
             public bool Activo { get; set; }
         }
     }
-

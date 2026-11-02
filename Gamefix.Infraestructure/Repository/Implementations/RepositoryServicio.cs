@@ -29,4 +29,16 @@ public class RepositoryServicio : IRepositoryServicio
             .AsNoTracking()
             .FirstOrDefaultAsync(servicio => servicio.ServicioId == id && servicio.Activo);
     }
+
+    public async Task AddAsync(Servicio entity)
+    {
+        _context.Servicio.Add(entity);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Servicio entity)
+    {
+        _context.Servicio.Update(entity);
+        await _context.SaveChangesAsync();
+    }
 }

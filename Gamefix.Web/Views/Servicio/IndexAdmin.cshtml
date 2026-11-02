@@ -12,6 +12,10 @@
     Listado de servicios técnicos registrados para consulta y mantenimiento.
 </p>
 
+<a asp-action="Create" class="btn btn-primary mb-3">
+    <i class="bi bi-plus-circle"></i> Crear servicio
+</a>
+
 <div class="table-responsive">
     <table class="table table-bordered table-hover align-middle">
         <thead>
@@ -38,11 +42,11 @@
                     </td>
                     <td>@item.NivelDificultad</td>
                     <td>
-                        <button type="button"
-                                class="btn btn-warning btn-sm">
+                        <a asp-action="Edit" asp-route-id="@item.ServicioId"
+                           class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil-fill"></i>
                             Editar
-                        </button>
+                        </a>
                         <a asp-action="Details"
                            asp-route-id="@item.ServicioId"
                            class="btn btn-info btn-sm">

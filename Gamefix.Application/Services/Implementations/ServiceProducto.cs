@@ -47,5 +47,25 @@ namespace Gamefix.Application.Services.Implementations
 
             return coleccion;
         }
+
+        public async Task<ICollection<CategoriaProductoDTO>> ListCategoriasAsync()
+        {
+            return _mapper.Map<ICollection<CategoriaProductoDTO>>(
+                await _repository.ListCategoriasAsync());
+        }
+
+        public async Task AddAsync(ProductoDTO dto)
+        {
+            var entity = _mapper.Map<Gamefix.Infraestructure.Models.Producto>(dto);
+            await _repository.AddAsync(entity);
+        }
+
+        public async Task UpdateAsync(ProductoDTO dto)
+        {
+            var entity = await _repository.FindByIdAsync(dto.ProductoId)
+                ?? throw new KeyNotFoundException("El producto no existe.");
+            _mapper.Map(dto, entity);
+            await _repository.UpdateAsync(entity);
+        }
     }
 }

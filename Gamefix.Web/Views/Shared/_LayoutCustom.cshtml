@@ -103,7 +103,7 @@
                                 </span>
                             </a>
 
-                            <ul class="collapse nav flex-column ms-1"
+                            <ul class="collapse show nav flex-column ms-1"
                                 id="submenuMantenimiento"
                                 data-bs-parent="#menu">
                                 <li class="w-100">
@@ -123,6 +123,22 @@
                                        class="nav-link text-white px-0">
                                         <i class="bi bi-tools"></i>
                                         <span class="d-none d-sm-inline ms-1">Servicios</span>
+                                    </a>
+                                </li>
+                                <li class="w-100">
+                                    <a asp-controller="Sucursal"
+                                       asp-action="Index"
+                                       class="nav-link text-white px-0">
+                                        <i class="bi bi-shop"></i>
+                                        <span class="d-none d-sm-inline ms-1">Sucursales</span>
+                                    </a>
+                                </li>
+                                <li class="w-100">
+                                    <a asp-controller="Agenda"
+                                       asp-action="Index"
+                                       class="nav-link text-white px-0">
+                                        <i class="bi bi-calendar-week"></i>
+                                        <span class="d-none d-sm-inline ms-1">Horarios y bloqueos</span>
                                     </a>
                                 </li>
                             </ul>
@@ -229,7 +245,7 @@
                asp-action="Privacy">
                 Privacidad
             </a>
-            <span class="ms-2">UTN-ISW711 - César Valenciano</span>
+            <span class="ms-2">UTN-ISW-711- César Valenciano</span>
         </div>
     </footer>
 

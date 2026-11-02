@@ -20,12 +20,16 @@ builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryFactura, RepositoryFactura>();
 builder.Services.AddTransient<IRepositoryReserva, RepositoryReserva>();
 builder.Services.AddTransient<IRepositoryServicio, RepositoryServicio>();
+builder.Services.AddTransient<IRepositorySucursal, RepositorySucursal>();
+builder.Services.AddTransient<IRepositoryAgenda, RepositoryAgenda>();
 
 // Configurar Services
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
 builder.Services.AddTransient<IServiceFactura, ServiceFactura>();
 builder.Services.AddTransient<IServiceReserva, ServiceReserva>();
 builder.Services.AddTransient<IServiceServicio, ServiceServicio>();
+builder.Services.AddTransient<IServiceSucursal, ServiceSucursal>();
+builder.Services.AddTransient<IServiceAgenda, ServiceAgenda>();
 
 // Configurar AutoMapper
 builder.Services.AddAutoMapper(
@@ -33,7 +37,8 @@ builder.Services.AddAutoMapper(
     typeof(ProductoProfile),
     typeof(FacturaProfile),
     typeof(ReservaProfile),
-    typeof(ServicioProfile)
+    typeof(ServicioProfile),
+    typeof(MantenimientoProfile)
 );
 
 // Configurar conexion a la base de datos SQL
@@ -49,7 +54,7 @@ builder.Services.AddDbContext<GameFixContext>(options =>
     }
 });
 
-// Configuraciin de Serilog
+//Configuraciin de Serilog
 var logger = new LoggerConfiguration()
     // Limitar la informaci�n de depuraci�n de Microsoft
     .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
@@ -58,7 +63,7 @@ var logger = new LoggerConfiguration()
     // Mostrar informaciin en la consola
     .WriteTo.Console(LogEventLevel.Information)
 
-    // Logs informativos
+    //Logs informativos
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
         .WriteTo.File(
@@ -68,7 +73,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs de depuracion
+    //Logs de depuracion
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug)
         .WriteTo.File(
@@ -78,7 +83,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs de advertencia
+    //Logs de advertencia
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning)
         .WriteTo.File(
@@ -88,7 +93,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs de error
+    //Logs de error
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
         .WriteTo.File(
@@ -98,7 +103,7 @@ var logger = new LoggerConfiguration()
             rollingInterval: RollingInterval.Day
         ))
 
-    // Logs criticos
+    //Logs criticos
     .WriteTo.Logger(log => log
         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal)
         .WriteTo.File(
@@ -112,7 +117,7 @@ var logger = new LoggerConfiguration()
 builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
-// Configure the HTTP request pipeline.
+//Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -121,7 +126,7 @@ if (!app.Environment.IsDevelopment())
 
 else
 {
-    // Error control Middleware 
+    //Error control Middleware 
     app.UseMiddleware<ErrorHandlingMiddleware>();
 }
 
@@ -137,7 +142,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// Activar Antiforgery para proteger contra ataques CSRF (Cross-Site Request Forgery)
+//Activar Antiforgery para proteger contra ataques CSRF (Cross-Site Request Forgery)
 app.UseAntiforgery();
 
 app.MapStaticAssets();

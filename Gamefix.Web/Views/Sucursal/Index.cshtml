@@ -1,0 +1,42 @@
+@model IEnumerable<Gamefix.Application.DTOs.SucursalDTO>
+@{
+    ViewData["Title"] = "Mantenimiento de sucursales";
+}
+<h1>Mantenimiento de sucursales</h1>
+<p class="text-muted">Listado de sucursales registradas para consulta y mantenimiento.</p>
+<p><a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Crear sucursal</a></p>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead>
+            <tr class="table-primary">
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Correo electrónico</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <strong>@item.Nombre</strong>
+                    <div class="small text-muted">@item.DireccionExacta</div>
+                </td>
+                <td>@item.Telefono</td>
+                <td>@item.CorreoElectronico</td>
+                <td><span class="badge @(item.Activa ? "bg-success" : "bg-secondary")">@(item.Activa ? "Activa" : "Inactiva")</span></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.SucursalId" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </a>
+                    <a asp-action="Details" asp-route-id="@item.SucursalId" class="btn btn-info btn-sm">
+                        <i class="bi bi-zoom-in"></i> Detalle
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

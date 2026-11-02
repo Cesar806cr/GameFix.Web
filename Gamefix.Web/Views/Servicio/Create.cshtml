@@ -1,0 +1,37 @@
+@model Gamefix.Application.DTOs.ServicioDTO
+@{
+    ViewData["Title"] = "Crear servicio";
+}
+<div class="maintenance-form-page">
+    <h1>Crear servicio</h1>
+    <h4>Define un nuevo servicio técnico.</h4>
+    <form asp-action="Create" asp-antiforgery="true" method="post" enctype="multipart/form-data" class="maintenance-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="maintenance-section">Información general</div>
+        <div class="row">
+            <div class="col-md-6 form-group"><label asp-for="Nombre" class="control-label">Nombre</label><input asp-for="Nombre" class="form-control" /><span asp-validation-for="Nombre" class="text-danger"></span></div>
+            <div class="col-md-6 form-group"><label asp-for="Precio" class="control-label"></label><input asp-for="Precio" class="form-control" type="number" step="0.01" /><span asp-validation-for="Precio" class="text-danger"></span></div>
+            <div class="col-12 form-group"><label asp-for="Descripcion" class="control-label"></label><textarea asp-for="Descripcion" class="form-control"></textarea><span asp-validation-for="Descripcion" class="text-danger"></span></div>
+        </div>
+        <div class="maintenance-section">Detalles técnicos</div>
+        <div class="row">
+            <div class="col-md-4 form-group"><label asp-for="DuracionMinutos" class="control-label">Duración en minutos</label><input asp-for="DuracionMinutos" class="form-control" step="60" /><span asp-validation-for="DuracionMinutos" class="text-danger"></span></div>
+            <div class="col-md-4 form-group"><label asp-for="ConsolaCompatible" class="control-label"></label><input asp-for="ConsolaCompatible" class="form-control" /><span asp-validation-for="ConsolaCompatible" class="text-danger"></span></div>
+            <div class="col-md-4 form-group"><label asp-for="NivelDificultad" class="control-label"></label><select asp-for="NivelDificultad" class="form-select"><option>Básico</option><option>Intermedio</option><option>Avanzado</option></select></div>
+        </div>
+        <div class="maintenance-section">Diagnóstico y garantía</div>
+        <div class="row">
+            <div class="col-md-6 form-group form-check"><input asp-for="RequiereDiagnostico" class="form-check-input" /><label asp-for="RequiereDiagnostico" class="form-check-label"></label></div>
+            <div class="col-md-6 form-group"><label asp-for="GarantiaDias" class="control-label"></label><input asp-for="GarantiaDias" class="form-control" /><span asp-validation-for="GarantiaDias" class="text-danger"></span></div>
+        </div>
+        <div class="maintenance-section">Imagen</div>
+        <div class="form-group">
+            <label for="imageFile" class="control-label">Imagen del servicio</label>
+            <input id="imageFile" name="imageFile" type="file" class="form-control" accept="image/jpeg,image/png,image/webp" />
+            <span class="form-text">Formatos permitidos: JPG, PNG o WEBP. Máximo 5 MB.</span>
+            <span asp-validation-for="Imagen" class="text-danger"></span>
+        </div>
+        <div class="form-actions"><a asp-action="IndexAdmin" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a><button type="submit" class="btn btn-primary">Guardar</button></div>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -27,6 +27,27 @@ namespace Gamefix.Infraestructure.Repository.Implementations
                 .FirstOrDefaultAsync(producto => producto.ProductoId == id);
         }
 
+        public async Task<ICollection<CategoriaProducto>> ListCategoriasAsync()
+        {
+            return await _context.CategoriaProducto
+                .Where(categoria => categoria.Activo)
+                .OrderBy(categoria => categoria.Nombre)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task AddAsync(Producto entity)
+        {
+            _context.Producto.Add(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Producto entity)
+        {
+            _context.Producto.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<ICollection<Producto>> ListAsync()
         {
             return await _context.Set<Producto>()

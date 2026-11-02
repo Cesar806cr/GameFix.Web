@@ -1,0 +1,26 @@
+@model Gamefix.Application.DTOs.SucursalDTO
+@{
+    ViewData["Title"] = "Crear sucursal";
+    var encargados = ViewBag.Encargados as IEnumerable<Gamefix.Application.DTOs.UsuarioOpcionDTO> ?? [];
+}
+<div class="maintenance-form-page">
+    <h1>Crear sucursal</h1>
+    <h4>Registra una nueva sede de GameFix.</h4>
+    <form asp-action="Create" asp-antiforgery="true" method="post" class="maintenance-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="maintenance-section">Información general</div>
+        <div class="row">
+            <div class="col-md-6 form-group"><label asp-for="Nombre" class="control-label"></label><input asp-for="Nombre" class="form-control" /><span asp-validation-for="Nombre" class="text-danger"></span></div>
+            <div class="col-md-6 form-group"><label asp-for="Telefono" class="control-label"></label><input asp-for="Telefono" class="form-control" /><span asp-validation-for="Telefono" class="text-danger"></span></div>
+            <div class="col-12 form-group"><label asp-for="Descripcion" class="control-label"></label><textarea asp-for="Descripcion" class="form-control"></textarea><span asp-validation-for="Descripcion" class="text-danger"></span></div>
+        </div>
+        <div class="maintenance-section">Ubicación y contacto</div>
+        <div class="row">
+            <div class="col-12 form-group"><label asp-for="DireccionExacta" class="control-label"></label><input asp-for="DireccionExacta" class="form-control" /><span asp-validation-for="DireccionExacta" class="text-danger"></span></div>
+            <div class="col-md-6 form-group"><label asp-for="CorreoElectronico" class="control-label"></label><input asp-for="CorreoElectronico" class="form-control" type="email" /><span asp-validation-for="CorreoElectronico" class="text-danger"></span></div>
+            <div class="col-md-6 form-group"><label asp-for="EncargadoIds" class="control-label">Encargados</label><select asp-for="EncargadoIds" class="form-select" multiple>@foreach (var encargado in encargados) { <option value="@encargado.UsuarioId">@encargado.Nombre - @encargado.CorreoElectronico</option> }</select><div class="form-text">Puede seleccionar varios encargados sin sucursal asignada.</div></div>
+        </div>
+        <div class="form-actions"><a asp-action="Index" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a><button type="submit" class="btn btn-primary">Guardar</button></div>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

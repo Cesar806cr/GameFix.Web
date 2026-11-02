@@ -73,3 +73,94 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.maintenance-form-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.25rem 0 2rem;
+}
+
+.maintenance-form-page > h1 {
+  margin-bottom: .15rem;
+}
+
+.maintenance-form-page > h4 {
+  color: var(--bs-secondary-color);
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.maintenance-form {
+  border: 1px solid var(--bs-border-color);
+  border-radius: .6rem;
+  padding: 1.5rem;
+}
+
+.maintenance-section {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: #00a9f4;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: .25rem 0 1rem;
+}
+
+.maintenance-section::after {
+  content: "";
+  height: 1px;
+  background-color: var(--bs-border-color);
+  flex: 1;
+}
+
+.maintenance-form .form-label,
+.maintenance-form .control-label {
+  margin-bottom: .45rem;
+}
+
+.maintenance-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.maintenance-form textarea {
+  min-height: 78px;
+}
+
+.maintenance-form .form-actions {
+  border-top: 1px solid var(--bs-border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.btn-maintenance-back {
+  background-color: #9c2bd3;
+  border-color: #9c2bd3;
+  color: #fff;
+}
+
+.btn-maintenance-back:hover,
+.btn-maintenance-back:focus {
+  background-color: #8421b6;
+  border-color: #8421b6;
+  color: #fff;
+}
+
+.agenda-sucursal-select {
+  max-width: 360px;
+}
+
+.maintenance-image-box {
+  padding: .2rem 0;
+}
+
+.maintenance-image-box .current-product-image {
+  max-width: 96px;
+  max-height: 96px;
+  object-fit: contain;
+}

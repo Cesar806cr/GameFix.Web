@@ -6,4 +6,6 @@ public interface IServiceServicio
 {
     Task<ICollection<ServicioDTO>> ListAsync();
     Task<ServicioDTO?> FindByIdAsync(int id);
+    Task AddAsync(ServicioDTO dto);
+    Task UpdateAsync(ServicioDTO dto);
 }

@@ -13,5 +13,8 @@ namespace Gamefix.Application.Services.Interfaces
         Task<ICollection<ProductoDTO>> ListAsync();
 
         Task<ProductoDTO?> FindByIdAsync(int id);
+            Task<ICollection<CategoriaProductoDTO>> ListCategoriasAsync();
+            Task AddAsync(ProductoDTO dto);
+            Task UpdateAsync(ProductoDTO dto);
     }
 }

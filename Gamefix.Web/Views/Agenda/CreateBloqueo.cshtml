@@ -1,0 +1,24 @@
+@model Gamefix.Application.DTOs.BloqueoHorarioDTO
+@{
+    ViewData["Title"] = "Crear bloqueo";
+    var sucursales = ViewBag.Sucursales as IEnumerable<Gamefix.Application.DTOs.SucursalDTO> ?? [];
+}
+<div class="maintenance-form-page">
+    <h1>Crear bloqueo</h1>
+    <h4>Bloquea una fecha o rango de atención.</h4>
+    <form asp-action="CreateBloqueo" method="post" class="maintenance-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="maintenance-section">Datos del bloqueo</div>
+        <div class="row">
+            <div class="col-md-6 form-group"><label asp-for="SucursalId" class="form-label">Sucursal</label><select asp-for="SucursalId" class="form-select" asp-items="@(new SelectList(sucursales, "SucursalId", "Nombre"))"></select></div>
+            <div class="col-md-6 form-group"><label asp-for="Motivo" class="form-label"></label><input asp-for="Motivo" class="form-control" /><span asp-validation-for="Motivo" class="text-danger"></span></div>
+            <div class="col-md-6 form-group"><label asp-for="FechaInicio" class="form-label">Fecha inicial</label><input asp-for="FechaInicio" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" /></div>
+            <div class="col-md-6 form-group"><label asp-for="FechaFin" class="form-label">Fecha final</label><input asp-for="FechaFin" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" /></div>
+            <div class="col-md-6 form-group"><label asp-for="HoraInicio" class="form-label">Hora inicial (opcional)</label><input asp-for="HoraInicio" type="time" step="3600" class="form-control" /></div>
+            <div class="col-md-6 form-group"><label asp-for="HoraFin" class="form-label">Hora final (opcional)</label><input asp-for="HoraFin" type="time" step="3600" class="form-control" /></div>
+        </div>
+        <div class="form-text">Deje ambas horas vacías para bloquear todo el día.</div>
+        <div class="form-actions"><a asp-action="Index" asp-route-sucursalId="@Model.SucursalId" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a><button type="submit" class="btn btn-primary">Guardar</button></div>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

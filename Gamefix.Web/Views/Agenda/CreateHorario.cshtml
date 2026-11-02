@@ -1,0 +1,21 @@
+@model Gamefix.Application.DTOs.HorarioSucursalDTO
+@{
+    ViewData["Title"] = "Crear horario";
+    var sucursales = ViewBag.Sucursales as IEnumerable<Gamefix.Application.DTOs.SucursalDTO> ?? [];
+}
+<div class="maintenance-form-page">
+    <h1>Crear horario</h1>
+    <h4>Configura el horario semanal de una sucursal.</h4>
+    <form asp-action="CreateHorario" method="post" class="maintenance-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="maintenance-section">Horario de atención</div>
+        <div class="row">
+            <div class="col-md-6 form-group"><label asp-for="SucursalId" class="form-label">Sucursal</label><select asp-for="SucursalId" class="form-select" asp-items="@(new SelectList(sucursales, "SucursalId", "Nombre"))"></select></div>
+            <div class="col-md-6 form-group"><label asp-for="DiaSemana" class="form-label">Día</label><select asp-for="DiaSemana" class="form-select"><option value="1">Lunes</option><option value="2">Martes</option><option value="3">Miércoles</option><option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option></select></div>
+            <div class="col-md-6 form-group"><label asp-for="HoraApertura" class="form-label">Apertura</label><input asp-for="HoraApertura" type="time" step="3600" class="form-control" /></div>
+            <div class="col-md-6 form-group"><label asp-for="HoraCierre" class="form-label">Cierre</label><input asp-for="HoraCierre" type="time" step="3600" class="form-control" /></div>
+        </div>
+        <div class="form-actions"><a asp-action="Index" asp-route-sucursalId="@Model.SucursalId" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a><button type="submit" class="btn btn-primary">Guardar</button></div>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

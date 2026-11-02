@@ -57,7 +57,7 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle"
-                       href="despues"
+                       href="#"
                        role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false">
@@ -80,6 +80,22 @@
                                asp-action="IndexAdmin">
                                 <i class="bi bi-tools"></i>
                                 Servicios técnicos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Sucursal"
+                               asp-action="Index">
+                                <i class="bi bi-shop"></i>
+                                Sucursales
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Agenda"
+                               asp-action="Index">
+                                <i class="bi bi-calendar-week"></i>
+                                Horarios y bloqueos
                             </a>
                         </li>
                     </ul>
