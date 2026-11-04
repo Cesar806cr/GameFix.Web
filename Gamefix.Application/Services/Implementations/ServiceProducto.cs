@@ -65,6 +65,7 @@ namespace Gamefix.Application.Services.Implementations
             var entity = await _repository.FindByIdAsync(dto.ProductoId)
                 ?? throw new KeyNotFoundException("El producto no existe.");
             _mapper.Map(dto, entity);
+            entity.CategoriaProducto = null!;
             await _repository.UpdateAsync(entity);
         }
     }

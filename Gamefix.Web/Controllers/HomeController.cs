@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Gamefix.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Gamefix.Web.Controllers
 {
@@ -27,6 +28,17 @@ namespace Gamefix.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult ErrorHandler(string? messagesJson)
+        {
+            var messages = string.IsNullOrWhiteSpace(messagesJson)
+                ? new List<string> { "Ocurrió un error inesperado." }
+                : JsonConvert.DeserializeObject<ErrorMiddlewareViewModel>(messagesJson)
+                    ?.ListMessages ?? new List<string> { "Ocurrió un error inesperado." };
+
+            return View(messages);
         }
     }
 }

@@ -34,6 +34,11 @@ namespace Gamefix.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAdmin(int? page)
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
+
             var collection = await _serviceProducto.ListAsync();
 
             ViewData["Title"] = "Mantenimiento de productos";
@@ -76,7 +81,10 @@ namespace Gamefix.Web.Controllers
             }
 
             await _serviceProducto.AddAsync(dto);
-            TempData["Mensaje"] = "Producto creado correctamente.";
+            TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+                "Producto",
+                "Producto creado correctamente.",
+                SweetAlertMessageType.success);
             return RedirectToAction(nameof(IndexAdmin));
         }
 
@@ -101,7 +109,7 @@ namespace Gamefix.Web.Controllers
             if (existing is null)
                 return NotFound();
 
-            if (imageFile is null)
+            if (imageFile is null || imageFile.Length == 0)
             {
                 dto.Imagen = existing.Imagen;
                 dto.NombreImagen = existing.NombreImagen;
@@ -119,7 +127,10 @@ namespace Gamefix.Web.Controllers
             }
 
             await _serviceProducto.UpdateAsync(dto);
-            TempData["Mensaje"] = "Producto actualizado correctamente.";
+            TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+                "Producto",
+                "Producto actualizado correctamente.",
+                SweetAlertMessageType.success);
             return RedirectToAction(nameof(IndexAdmin));
         }
 

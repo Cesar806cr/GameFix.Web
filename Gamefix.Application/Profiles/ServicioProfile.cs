@@ -9,5 +9,8 @@ public class ServicioProfile : Profile
     public ServicioProfile()
     {
         CreateMap<Servicio, ServicioDTO>();
+        CreateMap<ServicioDTO, Servicio>()
+            .ForMember(dest => dest.DetalleFactura, opt => opt.Ignore())
+            .ForMember(dest => dest.Reserva, opt => opt.Ignore());
     }
 }

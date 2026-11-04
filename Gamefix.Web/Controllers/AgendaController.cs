@@ -1,5 +1,6 @@
 using Gamefix.Application.DTOs;
 using Gamefix.Application.Services.Interfaces;
+using Gamefix.Web.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gamefix.Web.Controllers;
@@ -13,6 +14,11 @@ public class AgendaController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int? sucursalId)
     {
+        if (TempData.ContainsKey("Mensaje"))
+        {
+            ViewBag.NotificationMessage = TempData["Mensaje"];
+        }
+
         var sucursales = await _service.ListSucursalesAsync();
         var selected = sucursalId ?? sucursales.FirstOrDefault()?.SucursalId ?? 0;
         var agenda = selected == 0 ? new AgendaSucursalDTO() :
@@ -60,7 +66,10 @@ public class AgendaController : Controller
             return View(dto);
         }
 
-        TempData["Mensaje"] = result.Mensaje;
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Horario",
+            result.Mensaje,
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(Index), new { sucursalId = dto.SucursalId });
     }
 
@@ -94,7 +103,10 @@ public class AgendaController : Controller
             return View(dto);
         }
 
-        TempData["Mensaje"] = result.Mensaje;
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Bloqueo",
+            result.Mensaje,
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(Index), new { sucursalId = dto.SucursalId });
     }
 }

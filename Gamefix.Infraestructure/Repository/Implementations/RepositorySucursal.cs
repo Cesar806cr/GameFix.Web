@@ -27,7 +27,7 @@ public class RepositorySucursal : IRepositorySucursal
         await _context.Usuario
             .Include(usuario => usuario.Rol)
             .Where(usuario => usuario.Activo &&
-                              usuario.Rol.Nombre == "Encargado" &&
+                              usuario.RolId == 2 &&
                               (usuario.SucursalId == null ||
                                (sucursalId.HasValue && usuario.SucursalId == sucursalId)))
             .OrderBy(usuario => usuario.Nombre)

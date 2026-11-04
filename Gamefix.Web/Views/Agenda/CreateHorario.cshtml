@@ -6,7 +6,7 @@
 <div class="maintenance-form-page">
     <h1>Crear horario</h1>
     <h4>Configura el horario semanal de una sucursal.</h4>
-    <form asp-action="CreateHorario" method="post" class="maintenance-form">
+    <form asp-action="CreateHorario" asp-antiforgery="true" method="post" class="maintenance-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="maintenance-section">Horario de atención</div>
         <div class="row">

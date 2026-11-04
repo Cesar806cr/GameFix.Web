@@ -1,4 +1,5 @@
 using Gamefix.Application.Services.Interfaces;
+using Gamefix.Web.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using X.PagedList.Extensions;
@@ -16,11 +17,21 @@ public class ServicioController : Controller
 
     public async Task<IActionResult> Index()
     {
+        if (TempData.ContainsKey("Mensaje"))
+        {
+            ViewBag.NotificationMessage = TempData["Mensaje"];
+        }
+
         return View(await _serviceServicio.ListAsync());
     }
 
     public async Task<IActionResult> IndexAdmin(int? page)
     {
+        if (TempData.ContainsKey("Mensaje"))
+        {
+            ViewBag.NotificationMessage = TempData["Mensaje"];
+        }
+
         var servicios = await _serviceServicio.ListAsync();
         ViewData["Title"] = "Mantenimiento de servicios";
         return View(servicios.ToPagedList(page ?? 1, 5));
@@ -54,7 +65,10 @@ public class ServicioController : Controller
             return View(dto);
 
         await _serviceServicio.AddAsync(dto);
-        TempData["Mensaje"] = "Servicio creado correctamente.";
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Servicio",
+            "Servicio creado correctamente.",
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(IndexAdmin));
     }
 
@@ -93,7 +107,10 @@ public class ServicioController : Controller
             return View(dto);
 
         await _serviceServicio.UpdateAsync(dto);
-        TempData["Mensaje"] = "Servicio actualizado correctamente.";
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Servicio",
+            "Servicio actualizado correctamente.",
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(IndexAdmin));
     }
 

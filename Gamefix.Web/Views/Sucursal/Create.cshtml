@@ -18,7 +18,26 @@
         <div class="row">
             <div class="col-12 form-group"><label asp-for="DireccionExacta" class="control-label"></label><input asp-for="DireccionExacta" class="form-control" /><span asp-validation-for="DireccionExacta" class="text-danger"></span></div>
             <div class="col-md-6 form-group"><label asp-for="CorreoElectronico" class="control-label"></label><input asp-for="CorreoElectronico" class="form-control" type="email" /><span asp-validation-for="CorreoElectronico" class="text-danger"></span></div>
-            <div class="col-md-6 form-group"><label asp-for="EncargadoIds" class="control-label">Encargados</label><select asp-for="EncargadoIds" class="form-select" multiple>@foreach (var encargado in encargados) { <option value="@encargado.UsuarioId">@encargado.Nombre - @encargado.CorreoElectronico</option> }</select><div class="form-text">Puede seleccionar varios encargados sin sucursal asignada.</div></div>
+            <div class="col-md-6 form-group">
+                <label asp-for="EncargadoIds" class="control-label">Encargados</label>
+                @if (encargados.Any())
+                {
+                    <select asp-for="EncargadoIds" class="form-select" multiple>
+                        @foreach (var encargado in encargados)
+                        {
+                            <option value="@encargado.UsuarioId">@encargado.Nombre - @encargado.CorreoElectronico</option>
+                        }
+                    </select>
+                    <div class="form-text">Puede seleccionar varios encargados sin sucursal asignada.</div>
+                }
+                else
+                {
+                    <select class="form-select" disabled>
+                        <option>No hay encargados disponibles</option>
+                    </select>
+                    <div class="form-text">Todos los encargados activos ya tienen una sucursal asignada.</div>
+                }
+            </div>
         </div>
         <div class="form-actions"><a asp-action="Index" class="btn btn-maintenance-back"><i class="bi bi-arrow-left"></i> Regresar al listado</a><button type="submit" class="btn btn-primary">Guardar</button></div>
     </form>

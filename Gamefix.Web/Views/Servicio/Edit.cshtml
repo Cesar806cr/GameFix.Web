@@ -7,6 +7,7 @@
     <h4>Actualiza los datos del servicio.</h4>
     <form asp-action="Edit" asp-antiforgery="true" method="post" enctype="multipart/form-data" class="maintenance-form">
         <input asp-for="ServicioId" type="hidden" />
+        <input asp-for="Activo" type="hidden" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="maintenance-section">Información general</div>
         <div class="row">

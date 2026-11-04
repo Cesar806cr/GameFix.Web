@@ -6,7 +6,7 @@
 <div class="maintenance-form-page">
     <h1>Crear bloqueo</h1>
     <h4>Bloquea una fecha o rango de atención.</h4>
-    <form asp-action="CreateBloqueo" method="post" class="maintenance-form">
+    <form asp-action="CreateBloqueo" asp-antiforgery="true" method="post" class="maintenance-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="maintenance-section">Datos del bloqueo</div>
         <div class="row">

@@ -1,5 +1,6 @@
 using Gamefix.Application.DTOs;
 using Gamefix.Application.Services.Interfaces;
+using Gamefix.Web.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gamefix.Web.Controllers;
@@ -10,7 +11,15 @@ public class SucursalController : Controller
 
     public SucursalController(IServiceSucursal service) => _service = service;
 
-    public async Task<IActionResult> Index() => View(await _service.ListAsync());
+    public async Task<IActionResult> Index()
+    {
+        if (TempData.ContainsKey("Mensaje"))
+        {
+            ViewBag.NotificationMessage = TempData["Mensaje"];
+        }
+
+        return View(await _service.ListAsync());
+    }
 
     public async Task<IActionResult> Details(int id)
     {
@@ -36,7 +45,10 @@ public class SucursalController : Controller
         }
 
         await _service.AddAsync(dto);
-        TempData["Mensaje"] = "Sucursal creada correctamente.";
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Sucursal",
+            "Sucursal creada correctamente.",
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(Index));
     }
 
@@ -62,7 +74,10 @@ public class SucursalController : Controller
         }
 
         await _service.UpdateAsync(dto);
-        TempData["Mensaje"] = "Sucursal actualizada correctamente.";
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Sucursal",
+            "Sucursal actualizada correctamente.",
+            SweetAlertMessageType.success);
         return RedirectToAction(nameof(Index));
     }
 }

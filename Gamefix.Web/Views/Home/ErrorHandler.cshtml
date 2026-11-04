@@ -1,0 +1,14 @@
+@model IEnumerable<string>
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="alert alert-danger mt-4" role="alert">
+    <h1 class="h4">No se pudo completar la operación</h1>
+    @foreach (var message in Model)
+    {
+        <p class="mb-1">@message</p>
+    }
+</div>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Regresar al inicio</a>

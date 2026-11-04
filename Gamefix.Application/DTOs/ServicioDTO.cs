@@ -23,4 +23,5 @@ public record ServicioDTO
     public byte[]? Imagen { get; set; }
     public string? NombreImagen { get; set; }
     public string? TipoImagen { get; set; }
+    public bool Activo { get; set; } = true;
 }

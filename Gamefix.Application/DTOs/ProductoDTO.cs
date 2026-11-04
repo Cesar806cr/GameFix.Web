@@ -7,6 +7,7 @@ namespace Gamefix.Application.DTOs
         {
             public int ProductoId { get; set; }
 
+            [Range(1, int.MaxValue, ErrorMessage = "Seleccione una categoría.")]
             public int CategoriaProductoId { get; set; }
 
             public string CategoriaNombre { get; set; } = string.Empty;
@@ -38,6 +39,6 @@ namespace Gamefix.Application.DTOs
 
             public string? TipoImagen { get; set; }
 
-            public bool Activo { get; set; }
+            public bool Activo { get; set; } = true;
         }
     }
