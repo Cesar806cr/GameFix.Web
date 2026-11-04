@@ -17,7 +17,7 @@ public record ServicioDTO
     [Required(ErrorMessage = "El precio es requerido")]
     public decimal Precio { get; set; }
 
-    [Range(60, 1440, ErrorMessage = "La duración del servicio tiene que estar entre 60 y 1440 minutos.")]
+    [Range(1, 1440, ErrorMessage = "La duración del servicio tiene que estar entre 1 y 1440 minutos.")]
     [Required(ErrorMessage = "La duración del servicio es requerida")]
     public int DuracionMinutos { get; set; }
 

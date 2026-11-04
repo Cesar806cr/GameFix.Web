@@ -17,7 +17,7 @@
         </div>
         <div class="maintenance-section">Detalles técnicos</div>
         <div class="row">
-            <div class="col-md-4 form-group"><label asp-for="DuracionMinutos" class="control-label">Duración en minutos</label><input asp-for="DuracionMinutos" class="form-control" step="60" /><span asp-validation-for="DuracionMinutos" class="text-danger"></span></div>
+            <div class="col-md-4 form-group"><label asp-for="DuracionMinutos" class="control-label">Duración en minutos</label><input asp-for="DuracionMinutos" class="form-control" step="60" data-msg-step="Ingrese un múltiplo de 60." /><span asp-validation-for="DuracionMinutos" class="text-danger"></span></div>
             <div class="col-md-4 form-group"><label asp-for="ConsolaCompatible" class="control-label"></label><input asp-for="ConsolaCompatible" class="form-control" /><span asp-validation-for="ConsolaCompatible" class="text-danger"></span></div>
             <div class="col-md-4 form-group"><label asp-for="NivelDificultad" class="control-label"></label><select asp-for="NivelDificultad" class="form-select"><option>Básico</option><option>Intermedio</option><option>Avanzado</option></select></div>
         </div>
