@@ -5,9 +5,12 @@ namespace Gamefix.Application.DTOs;
 public record HorarioSucursalDTO
 {
     public int HorarioSucursalId { get; set; }
+
+    [Required(ErrorMessage = "Seleccione una sucursal.")]
     public int SucursalId { get; set; }
 
-    [Range(1, 6, ErrorMessage = "Seleccione un día de lines a sábado")]
+    [Required(ErrorMessage = "Seleccione un día de la semana.")]
+    [Range(1, 6, ErrorMessage = "Seleccione un día de lunes a sábado")]
     public byte DiaSemana { get; set; }
 
     [Required(ErrorMessage = "La hora de apertura es obligatoria.")]
@@ -22,6 +25,8 @@ public record HorarioSucursalDTO
 public record BloqueoHorarioDTO
 {
     public int BloqueoHorarioId { get; set; }
+
+    [Required(ErrorMessage = "Seleccione una sucursal.")]
     public int SucursalId { get; set; }
 
     [Required(ErrorMessage = "La fecha de inicio es obligatoria.")]

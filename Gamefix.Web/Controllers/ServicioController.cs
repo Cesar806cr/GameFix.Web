@@ -126,7 +126,7 @@ public class ServicioController : Controller
 
         if (imageFile.Length > maxImageSize)
         {
-            ModelState.AddModelError("Imagen",
+            ModelState.AddModelError(string.Empty,
                 "La imagen no puede superar los 5 MB.");
             return;
         }
@@ -134,7 +134,7 @@ public class ServicioController : Controller
         if (!allowedContentTypes.Contains(imageFile.ContentType,
                 StringComparer.OrdinalIgnoreCase))
         {
-            ModelState.AddModelError("Imagen",
+            ModelState.AddModelError(string.Empty,
                 "Seleccione una imagen JPG, PNG o WEBP.");
             return;
         }

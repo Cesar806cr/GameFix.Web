@@ -6,7 +6,7 @@
     <h1>Crear servicio</h1>
     <h4>Define un nuevo servicio técnico.</h4>
     <form asp-action="Create" asp-antiforgery="true" method="post" enctype="multipart/form-data" class="maintenance-form">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="maintenance-section">Información general</div>
         <div class="row">
             <div class="col-md-6 form-group"><label asp-for="Nombre" class="control-label">Nombre</label><input asp-for="Nombre" class="form-control" /><span asp-validation-for="Nombre" class="text-danger"></span></div>
