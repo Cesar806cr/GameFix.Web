@@ -32,7 +32,7 @@ public class RepositoryAgenda : IRepositoryAgenda
         await _context.HorarioSucursal
             .Where(horario => horario.SucursalId == sucursalId && horario.Activo)
             .OrderBy(horario => horario.DiaSemana)
-            .AsNoTracking()
+            .AsNoTracking() 
             .ToListAsync();
 
     public async Task<ICollection<BloqueoHorario>> ListBloqueosAsync(int sucursalId) =>

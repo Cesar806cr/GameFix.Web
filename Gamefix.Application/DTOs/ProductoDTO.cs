@@ -20,6 +20,7 @@ namespace Gamefix.Application.DTOs
         [StringLength(500, ErrorMessage = "La descripción no puede superar los 500 caracteres.")]
         public string? Descripcion { get; set; }
 
+        [Required(ErrorMessage = "Coloque una marca")]
         [StringLength(100, ErrorMessage = "El nombre de la marca no puede superar los 100 caracteres.")]
         public string? Marca { get; set; }
 

@@ -1,0 +1,398 @@
+﻿@model IReadOnlyList<ReservasDeportivas.Domain.Entities.Actividad>
+@* INDEX RESERVAS *@
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Reservar actividad";
+
+    var perfil = Context.Session.GetString("Perfil") ?? "Cliente";
+    var esAdministrador = perfil == "Administrador";
+}
+
+<div class="container py-4">
+
+    <!-- ENCABEZADO Y CAMBIO DE PERFIL -->
+    <div class="d-flex flex-wrap justify-content-between
+                align-items-center gap-3 mb-4">
+
+        <div>
+            <h1 class="fw-bold text-primary mb-1">
+                <i class="bi bi-trophy"></i>
+                Reservas deportivas
+            </h1>
+
+            <p class="text-muted mb-0">
+                Gestiona tus actividades y reservaciones.
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge rounded-pill
+                @(esAdministrador ? "bg-danger" : "bg-success")
+                p-2">
+                <i class="bi @(esAdministrador
+                    ? "bi-shield-lock"
+                    : "bi-person-circle")"></i>
+
+                @perfil
+            </span>
+
+            <form asp-controller="Perfil"
+                  asp-action="Cambiar"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-outline-primary">
+
+                    <i class="bi bi-arrow-left-right"></i>
+
+                    Cambiar a @(esAdministrador
+                    ? "Cliente"
+                    : "Administrador")
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MENSAJE PRINCIPAL -->
+    <div class="p-4 mb-4 rounded-4 bg-primary text-white">
+        <h2 class="fw-bold">
+            @(esAdministrador
+                ? "Administración de reservaciones"
+                : "Reserva tu actividad")
+        </h2>
+
+        <p class="mb-0">
+            @(esAdministrador
+                ? "Consulta la agenda y administra las reservaciones."
+                : "Selecciona tu deporte, fecha y horario.")
+        </p>
+    </div>
+
+    <!-- BUSCADOR CON AUTOCOMPLETADO -->
+    <div class="mb-4 position-relative">
+        <label for="buscarActividad" class="form-label fw-semibold">
+            Buscar actividad
+        </label>
+
+        <input id="buscarActividad"
+               class="form-control"
+               autocomplete="off"
+               placeholder="Escriba fútbol, tenis, baloncesto..." />
+
+        <div id="sugerenciasActividad"
+             class="list-group position-absolute w-100 shadow"
+             style="z-index:1050">
+        </div>
+    </div>
+
+    <!-- ACTIVIDADES -->
+    <div class="d-flex flex-wrap justify-content-between
+                align-items-center mb-3 gap-2">
+
+        <h3 class="mb-0">Actividades disponibles</h3>
+
+        @if (esAdministrador)
+        {
+            <a asp-controller="Actividades"
+               asp-action="Index"
+               class="btn btn-outline-danger">
+                <i class="bi bi-gear"></i>
+                Gestionar actividades
+            </a>
+        }
+    </div>
+
+    <div class="row g-4" id="listaActividades">
+
+        @foreach (var actividad in Model)
+        {
+            <div class="col-md-6 col-lg-4 actividad-item"
+                 data-nombre="@actividad.Nombre.ToLowerInvariant()">
+
+                <div class="card h-100 shadow-sm actividad-card"
+                     data-id="@actividad.Id"
+                     data-nombre="@actividad.Nombre"
+                     role="group">
+
+                    <img src="@actividad.ImagenUrl"
+                         class="card-img-top"
+                         alt="@actividad.Nombre"
+                         loading="lazy"
+                         style="height:200px; object-fit:cover" />
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="card-title">
+                            @actividad.Nombre
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            @actividad.Descripcion
+                        </p>
+
+                        <p class="mb-2">
+                            <i class="bi bi-clock text-primary"></i>
+                            Duración:
+                            <strong>@actividad.DuracionMinutos minutos</strong>
+                        </p>
+
+                        <p class="fw-bold text-primary text-end fs-5 mt-auto mb-3">
+                            ₡@actividad.Precio.ToString("N0")
+                        </p>
+
+                        @if (!esAdministrador)
+                        {
+                            <button type="button"
+                                    class="btn btn-outline-primary seleccionar-actividad">
+
+                                <i class="bi bi-calendar-plus"></i>
+                                Reservar
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="d-grid gap-2">
+                                <button type="button"
+                                        class="btn btn-outline-secondary ver-agenda-actividad"
+                                        data-id="@actividad.Id">
+
+                                    <i class="bi bi-calendar-week"></i>
+                                    Consultar agenda
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-outline-danger eliminar-actividad"
+                                        data-id="@actividad.Id"
+                                        data-nombre="@actividad.Nombre">
+
+                                    <i class="bi bi-trash"></i>
+                                    Eliminar actividad
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr class="my-5" />
+
+    <!-- CONTENIDO SEGÚN PERFIL -->
+    <div class="row g-4">
+
+        @if (!esAdministrador)
+        {
+            <!-- FORMULARIO DEL CLIENTE -->
+            <div class="col-lg-5">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+
+                        <h3 class="h4 mb-4">
+                            <i class="bi bi-calendar-check text-primary"></i>
+                            Datos de la reservación
+                        </h3>
+
+                        <form id="formReserva">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   id="actividadId"
+                                   name="ActividadId" />
+
+                            <div class="mb-3">
+                                <label for="actividadNombre"
+                                       class="form-label">
+                                    Actividad
+                                </label>
+
+                                <input id="actividadNombre"
+                                       name="ActividadNombre"
+                                       class="form-control"
+                                       readonly
+                                       required
+                                       placeholder="Seleccione una actividad" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nombreCliente"
+                                       class="form-label">
+                                    Nombre completo
+                                </label>
+
+                                <input id="nombreCliente"
+                                       name="NombreCliente"
+                                       class="form-control"
+                                       maxlength="100"
+                                       autocomplete="name"
+                                       required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">
+                                    Correo electrónico
+                                </label>
+
+                                <input id="correo"
+                                       name="Correo"
+                                       type="email"
+                                       class="form-control"
+                                       autocomplete="email"
+                                       maxlength="150"
+                                       required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">
+                                    Teléfono
+                                </label>
+
+                                <input id="telefono"
+                                       name="Telefono"
+                                       type="tel"
+                                       class="form-control"
+                                       autocomplete="tel"
+                                       maxlength="20"
+                                       required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fechaActividad"
+                                       class="form-label">
+                                    Fecha de la actividad
+                                </label>
+
+                                <input id="fechaActividad"
+                                       name="Fecha"
+                                       type="date"
+                                       class="form-control"
+                                       required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="horaInicio"
+                                       class="form-label">
+                                    Horario disponible
+                                </label>
+
+                                <select id="horaInicio"
+                                        name="HoraInicio"
+                                        class="form-select"
+                                        required>
+
+                                    <option value="">
+                                        Seleccione primero una actividad y fecha
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary w-100"
+                                    type="submit">
+
+                                <i class="bi bi-check-circle"></i>
+                                Confirmar reservación
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- AGENDA -->
+        <div class="@(esAdministrador ? "col-12" : "col-lg-7")">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <div class="d-flex flex-wrap
+                                justify-content-between
+                                align-items-center gap-2 mb-3">
+
+                        <h3 class="h4 mb-0">
+                            <i class="bi bi-calendar3 text-primary"></i>
+                            Agenda de reservaciones
+                        </h3>
+
+                        @if (esAdministrador)
+                        {
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <select id="filtroActividad"
+                                        class="form-select"
+                                        aria-label="Filtrar por actividad">
+
+                                    <option value="">Todas las actividades</option>
+
+                                    @foreach (var actividad in Model)
+                                    {
+                                        <option value="@actividad.Id">
+                                            @actividad.Nombre
+                                        </option>
+                                    }
+                                </select>
+
+                                <button type="button"
+                                        id="btnActualizarAgenda"
+                                        class="btn btn-outline-primary">
+
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    Actualizar
+                                </button>
+                            </div>
+                        }
+                    </div>
+
+                    <div id="calendario"></div>
+
+                    @if (esAdministrador)
+                    {
+                        <div class="alert alert-info mt-3 mb-0">
+                            <i class="bi bi-info-circle"></i>
+                            Selecciona una reservación en el calendario
+                            para consultar las acciones administrativas.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toastContainer"
+         class="toast-container position-fixed bottom-0 end-0 p-3"
+         style="z-index:1100">
+
+        <div id="appToast"
+             class="toast"
+             role="status"
+             aria-live="polite"
+             aria-atomic="true">
+
+            <div class="toast-header">
+                <strong class="me-auto">Reservas deportivas</strong>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="toast"
+                        aria-label="Cerrar">
+                </button>
+            </div>
+
+            <div id="toastMensaje" class="toast-body"></div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        window.reservasConfig = {
+            esAdministrador: @esAdministrador.ToString().ToLowerInvariant()
+        };
+    </script>
+
+    <script src="~/js/reservas.js" asp-append-version="true"></script>
+}

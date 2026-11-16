@@ -374,6 +374,7 @@ public partial class GameFixContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(120);
             entity.Property(e => e.Telefono).HasMaxLength(25);
 
+       
             entity.HasOne(d => d.Rol).WithOne(p => p.Usuario)
                 .HasForeignKey<Usuario>(d => d.RolId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

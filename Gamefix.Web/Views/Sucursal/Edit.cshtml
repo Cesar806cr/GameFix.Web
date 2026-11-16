@@ -30,6 +30,7 @@
                             <option value="@encargado.UsuarioId" selected="@(Model.EncargadoIds.Contains(encargado.UsuarioId))">@encargado.Nombre - @encargado.CorreoElectronico</option>
                         }
                     </select>
+                    <span asp-validation-for="EncargadoIds" class="text-danger"></span>
                     <div class="form-text">Mantén presionada la tecla Ctrl para seleccionar varios.</div>
                 }
                 else

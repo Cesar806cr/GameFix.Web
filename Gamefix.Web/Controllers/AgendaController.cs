@@ -52,7 +52,7 @@ public class AgendaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateHorario(HorarioSucursalDTO dto)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) 
         {
             ViewBag.Sucursales = await _service.ListSucursalesAsync();
             return View(dto);
@@ -61,7 +61,7 @@ public class AgendaController : Controller
         var result = await _service.AddHorarioAsync(dto);
         if (!result.Exito)
         {
-            ModelState.AddModelError(string.Empty, result.Mensaje);
+            ModelState.AddModelError(string.Empty, result.Mensaje); 
             ViewBag.Sucursales = await _service.ListSucursalesAsync();
             return View(dto);
         }
