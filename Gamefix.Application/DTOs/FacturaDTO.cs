@@ -46,13 +46,11 @@ public record FacturaCrearDTO
         ErrorMessage = "Seleccione un estado válido.")]
     public string EstadoFactura { get; set; } = "Pendiente";
 
-    [MinLength(1, ErrorMessage = "Agregue al menos un producto o servicio.")]
     public List<FacturaLineaDTO> Lineas { get; set; } = [];
 }
 
 public record FacturaLineaDTO
 {
-    [Required(ErrorMessage = "El servicio es requerido")]
     public int? ServicioId { get; set; }
     public int? ProductoId { get; set; }
 

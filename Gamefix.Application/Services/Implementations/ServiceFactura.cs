@@ -76,6 +76,22 @@ public class ServiceFactura : IServiceFactura
     public async Task<(bool Exito, string Mensaje)> CreateAsync(
         FacturaCrearDTO dto, int sucursalId, int usuarioRegistroId)
     {
+        if (dto.Lineas is null || dto.Lineas.Count == 0)
+            return (false, "Seleccione al menos un servicio y coloque una cantidad válida.");
+
+        if (!dto.Lineas.Any(linea =>
+            linea.ServicioId.HasValue &&
+            linea.Cantidad >= 1 &&
+            linea.Cantidad <= 9999 &&
+            linea.Cantidad == decimal.Truncate(linea.Cantidad)))
+            return (false, "Seleccione al menos un servicio y coloque una cantidad válida.");
+
+        if (dto.Lineas.Any(linea =>
+            linea.Cantidad < 1 ||
+            linea.Cantidad > 9999 ||
+            linea.Cantidad != decimal.Truncate(linea.Cantidad)))
+            return (false, "La cantidad debe ser un número entero entre 1 y 9999.");
+
         var estadosPermitidos = new[]
         {
             "Proforma", "Pendiente", "Pagada", "Anulada"

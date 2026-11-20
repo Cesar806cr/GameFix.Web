@@ -13,7 +13,7 @@
         <span class="badge bg-info fs-6">@Model.SucursalNombre</span>
     </div>
 
-    <form asp-action="Create" method="post" class="maintenance-form">
+    <form asp-action="Create" method="post" class="maintenance-form" novalidate>
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -51,8 +51,7 @@
             </div>
             <div class="col-md-6 form-group">
                 <label asp-for="Reserva.Fecha" class="form-label">Fecha</label>
-                <input asp-for="Reserva.Fecha" type="date"
-                       min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+                <input asp-for="Reserva.Fecha" type="date" class="form-control" />
                 <span asp-validation-for="Reserva.Fecha" class="text-danger"></span>
             </div>
             <div class="col-12 form-group">
@@ -128,6 +127,76 @@
         });
 
         fecha.addEventListener('change', cargarHoras);
+
+        function mostrarErrorCampo(nombreCampo, mensaje) {
+            const span = document.querySelector(`[data-valmsg-for="${nombreCampo}"]`);
+            if (span)
+                span.textContent = mensaje;
+        }
+
+        function limpiarErrorCampo(nombreCampo) {
+            mostrarErrorCampo(nombreCampo, '');
+        }
+
+        document.querySelector('form.maintenance-form').addEventListener('submit', event => {
+            let valido = true;
+
+            if (Number(cliente.value || 0) === 0) {
+                mostrarErrorCampo('Reserva.ClienteId', 'Seleccione un cliente.');
+                valido = false;
+            }
+
+            if (Number(servicio.value || 0) === 0) {
+                mostrarErrorCampo('Reserva.ServicioId', 'Seleccione un servicio.');
+                valido = false;
+            }
+
+            if (!fecha.value) {
+                mostrarErrorCampo('Reserva.Fecha', 'Seleccione una fecha.');
+                valido = false;
+            } else if (fecha.value < '@DateTime.Today.ToString("yyyy-MM-dd")') {
+                mostrarErrorCampo('Reserva.Fecha', 'La fecha de la reserva no puede ser anterior a la fecha actual.');
+                valido = false;
+            }
+
+            if (!horaInicio.value) {
+                mostrarErrorCampo('Reserva.HoraInicio', 'Seleccione una hora.');
+                valido = false;
+            }
+
+            const consola = document.querySelector('[name="Reserva.TipoConsola"]');
+            if (!consola.value.trim()) {
+                mostrarErrorCampo('Reserva.TipoConsola', 'Indique la consola.');
+                valido = false;
+            } else if (consola.value.trim().length < 2 ||
+                consola.value.trim().length > 100) {
+                mostrarErrorCampo('Reserva.TipoConsola',
+                    'La consola debe tener entre 2 y 100 caracteres.');
+                valido = false;
+            }
+
+            const problema = document.querySelector('[name="Reserva.ProblemaReportado"]');
+            if (!problema.value.trim()) {
+                mostrarErrorCampo('Reserva.ProblemaReportado', 'Describa el problema.');
+                valido = false;
+            } else if (problema.value.trim().length < 5 ||
+                problema.value.trim().length > 1000) {
+                mostrarErrorCampo('Reserva.ProblemaReportado',
+                    'El problema debe tener entre 5 y 1000 caracteres.');
+                valido = false;
+            }
+
+            if (!valido)
+                event.preventDefault();
+        });
+
+        cliente.addEventListener('change', () => limpiarErrorCampo('Reserva.ClienteId'));
+        servicio.addEventListener('change', () => limpiarErrorCampo('Reserva.ServicioId'));
+        fecha.addEventListener('change', () => limpiarErrorCampo('Reserva.Fecha'));
+        document.querySelector('[name="Reserva.TipoConsola"]')
+            .addEventListener('input', () => limpiarErrorCampo('Reserva.TipoConsola'));
+        document.querySelector('[name="Reserva.ProblemaReportado"]')
+            .addEventListener('input', () => limpiarErrorCampo('Reserva.ProblemaReportado'));
 
         async function cargarHoras() {
             horaInicio.value = '';

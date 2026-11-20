@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <form asp-action="Create" method="post" class="maintenance-form" id="facturaForm">
+    <form asp-action="Create" method="post" class="maintenance-form" id="facturaForm" novalidate>
         @Html.AntiForgeryToken()
         <input asp-for="Factura.ReservaId" type="hidden" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -63,6 +63,7 @@
                 <i class="bi bi-plus-circle"></i> Agregar línea
             </button>
         </div>
+        <div id="facturaLineasError" class="text-danger mb-2"></div>
         <div class="table-responsive">
             <table class="table align-middle" id="tablaLineas">
                 <thead>
@@ -151,7 +152,7 @@
                 </td>
                 <td>
                     <label class="form-label small mb-1">Servicio</label>
-                    <input type="number" min="0" step="1" value="${cantidad}"
+                    <input type="number" min="1" max="9999" step="1" value="${cantidad}"
                            class="form-control cantidad-servicio mb-2" />
                     <label class="form-label small mb-1">Producto</label>
                     <input type="number" min="0" step="1" value="${cantidad}"
@@ -191,12 +192,20 @@
         document.getElementById('facturaForm').addEventListener('submit', event => {
             document.querySelectorAll('.linea-submit').forEach(input => input.remove());
             let indice = 0;
+            let tieneServicioValido = false;
+            let tieneCantidadInvalida = false;
 
             document.querySelectorAll('#tablaLineas tbody tr').forEach(row => {
                 const servicioId = row.querySelector('.linea-servicio').value;
                 const productoId = row.querySelector('.linea-producto').value;
                 const cantidadServicio = Number(row.querySelector('.cantidad-servicio').value || 0);
                 const cantidadProducto = Number(row.querySelector('.cantidad-producto').value || 0);
+
+                if (servicioId && cantidadServicio >= 1)
+                    tieneServicioValido = true;
+                if ((servicioId && (!Number.isInteger(cantidadServicio) || cantidadServicio < 1 || cantidadServicio > 9999)) ||
+                    (productoId && (!Number.isInteger(cantidadProducto) || cantidadProducto < 1 || cantidadProducto > 9999)))
+                    tieneCantidadInvalida = true;
 
                 if (servicioId && cantidadServicio > 0) {
                     row.insertAdjacentHTML('beforeend',
@@ -211,6 +220,16 @@
                     indice++;
                 }
             });
+
+            if (!tieneServicioValido || tieneCantidadInvalida) {
+                event.preventDefault();
+                document.getElementById('facturaLineasError').textContent =
+                    tieneCantidadInvalida
+                        ? 'La cantidad debe ser un número entero entre 1 y 9999.'
+                        : 'Seleccione al menos un servicio y coloque una cantidad válida.';
+            } else {
+                document.getElementById('facturaLineasError').textContent = '';
+            }
         });
     </script>
 }

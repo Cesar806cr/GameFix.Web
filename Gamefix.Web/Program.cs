@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using System.Text;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -117,6 +119,13 @@ var logger = new LoggerConfiguration()
 builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
+var culturaEspañola = new CultureInfo("es-CR");
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(culturaEspañola),
+    SupportedCultures = [culturaEspañola],
+    SupportedUICultures = [culturaEspañola]
+});
 //Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
