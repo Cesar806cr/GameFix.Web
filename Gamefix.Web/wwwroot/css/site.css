@@ -164,3 +164,7 @@ body {
   max-height: 96px;
   object-fit: contain;
 }
+
+.text-danger {
+    color: #ffc107 !important;
+}

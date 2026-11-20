@@ -1,0 +1,125 @@
+@model Gamefix.Application.DTOs.ReservaFormularioDTO
+
+@{
+    ViewData["Title"] = "Registrar reserva";
+}
+
+<div class="maintenance-form-page">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Registrar reserva</h1>
+            <p class="text-secondary mb-0">Crea la cita y su factura proforma.</p>
+        </div>
+        <span class="badge bg-info fs-6">@Model.SucursalNombre</span>
+    </div>
+
+    <form asp-action="Create" method="post" class="maintenance-form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="maintenance-section">Datos de la cita</div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.ClienteId" class="form-label">Cliente</label>
+                <select asp-for="Reserva.ClienteId" class="form-select" id="cliente">
+                    <option value="0">Seleccione un cliente</option>
+                    @foreach (var cliente in Model.Clientes)
+                    {
+                        <option value="@cliente.UsuarioId" data-email="@cliente.CorreoElectronico">
+                            @cliente.Nombre
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Reserva.ClienteId" class="text-danger"></span>
+                <div id="clienteInfo" class="form-text">Seleccione un cliente para ver su correo.</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.ServicioId" class="form-label">Servicio</label>
+                <select asp-for="Reserva.ServicioId" class="form-select" id="servicio">
+                    <option value="0" data-duration="0">Seleccione un servicio</option>
+                    @foreach (var servicio in Model.Servicios)
+                    {
+                        <option value="@servicio.ServicioId"
+                                data-duration="@servicio.DuracionMinutos"
+                                data-price="@servicio.Precio">
+                            @servicio.Nombre
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Reserva.ServicioId" class="text-danger"></span>
+                <div id="servicioInfo" class="form-text">Seleccione un servicio para ver su duración.</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.Fecha" class="form-label">Fecha</label>
+                <input asp-for="Reserva.Fecha" type="date"
+                       min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+                <span asp-validation-for="Reserva.Fecha" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.HoraInicio" class="form-label">Hora de inicio</label>
+                <input asp-for="Reserva.HoraInicio" type="time" step="3600" class="form-control" />
+                <span asp-validation-for="Reserva.HoraInicio" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="maintenance-section">Preguntas sobre la consola</div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.TipoConsola" class="form-label">Tipo de consola</label>
+                <input asp-for="Reserva.TipoConsola" class="form-control" />
+                <span asp-validation-for="Reserva.TipoConsola" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Reserva.ProblemaReportado" class="form-label">Problema reportado</label>
+                <textarea asp-for="Reserva.ProblemaReportado" class="form-control"></textarea>
+                <span asp-validation-for="Reserva.ProblemaReportado" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 form-group form-check ms-2">
+                <input asp-for="Reserva.EnciendeCorrectamente" class="form-check-input" />
+                <label asp-for="Reserva.EnciendeCorrectamente" class="form-check-label">¿Enciende correctamente?</label>
+            </div>
+            <div class="col-md-4 form-group form-check ms-2">
+                <input asp-for="Reserva.FueReparadaAnteriormente" class="form-check-input" />
+                <label asp-for="Reserva.FueReparadaAnteriormente" class="form-check-label">¿Fue reparada anteriormente?</label>
+            </div>
+            <div class="col-md-4 form-group form-check ms-2">
+                <input asp-for="Reserva.HaceRuidoLectora" class="form-check-input" />
+                <label asp-for="Reserva.HaceRuidoLectora" class="form-check-label">¿Hace ruido la lectora?</label>
+            </div>
+            <div class="col-12 form-group">
+                <label asp-for="Reserva.ObservacionesCliente" class="form-label">Observaciones adicionales</label>
+                <textarea asp-for="Reserva.ObservacionesCliente" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn btn-maintenance-back">
+                <i class="bi bi-arrow-left"></i> Regresar
+            </a>
+            <span class="badge bg-warning text-dark align-self-center">Estado inicial: Pendiente</span>
+            <button type="submit" class="btn btn-primary">Registrar reserva</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const cliente = document.getElementById('cliente');
+        const servicio = document.getElementById('servicio');
+
+        cliente.addEventListener('change', () => {
+            const option = cliente.options[cliente.selectedIndex];
+            document.getElementById('clienteInfo').textContent =
+                option.dataset.email ? `Correo: ${option.dataset.email}` : 'Seleccione un cliente para ver su correo.';
+        });
+
+        servicio.addEventListener('change', () => {
+            const option = servicio.options[servicio.selectedIndex];
+            const minutos = Number(option.dataset.duration || 0);
+            document.getElementById('servicioInfo').textContent =
+                minutos > 0 ? `Duración: ${minutos} minutos. Tarifa: ₡${Number(option.dataset.price).toLocaleString('es-CR')}` :
+                'Seleccione un servicio para ver su duración.';
+        });
+    </script>
+}

@@ -1,0 +1,171 @@
+@using System.Text.Json
+@model Gamefix.Application.DTOs.FacturaFormularioDTO
+
+@{
+    ViewData["Title"] = "Registrar factura";
+    var servicios = Model.Servicios.Select(item => new { id = item.ServicioId, nombre = item.Nombre, precio = item.Precio, tipo = "servicio" });
+    var productos = Model.Productos.Select(item => new { id = item.ProductoId, nombre = item.Nombre, precio = item.Precio, tipo = "producto" });
+    var opciones = servicios.Concat(productos).ToList();
+}
+
+<div class="maintenance-form-page">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Registrar factura</h1>
+            <p class="text-secondary mb-0">Comprobante de la sucursal del encargado.</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-info fs-6 d-block mb-1">@Model.SucursalNombre</span>
+            <span class="badge bg-secondary fs-6">Fecha: @DateTime.Today.ToString("dd/MM/yyyy")</span>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post" class="maintenance-form" id="facturaForm">
+        @Html.AntiForgeryToken()
+        <input asp-for="Factura.ReservaId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="maintenance-section">Encabezado</div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label asp-for="Factura.ClienteId" class="form-label">Cliente</label>
+                <select asp-for="Factura.ClienteId" class="form-select" id="clienteFactura">
+                    <option value="0">Seleccione un cliente</option>
+                    @foreach (var cliente in Model.Clientes)
+                    {
+                        <option value="@cliente.UsuarioId" data-email="@cliente.CorreoElectronico">@cliente.Nombre</option>
+                    }
+                </select>
+                <span asp-validation-for="Factura.ClienteId" class="text-danger"></span>
+                <div id="correoCliente" class="form-text">Seleccione un cliente para ver su correo.</div>
+            </div>
+            <div class="col-md-6 form-group">
+                <label class="form-label">Encargado</label>
+                <input class="form-control" value="@Model.EncargadoNombre" readonly />
+            </div>
+        </div>
+
+        <div class="maintenance-section d-flex justify-content-between align-items-center">
+            <span>Detalle de la factura</span>
+            <button type="button" class="btn btn-outline-info btn-sm" id="agregarLinea">
+                <i class="bi bi-plus-circle"></i> Agregar línea
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle" id="tablaLineas">
+                <thead>
+                    <tr>
+                        <th>Producto o servicio</th>
+                        <th style="width: 130px;">Cantidad</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-end">Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="col-md-5">
+                <dl class="row">
+                    <dt class="col-7">Subtotal</dt>
+                    <dd class="col-5 text-end" id="subtotal">₡0</dd>
+                    <dt class="col-7">Impuesto (13%)</dt>
+                    <dd class="col-5 text-end" id="impuesto">₡0</dd>
+                    <dt class="col-7 fs-5">Total</dt>
+                    <dd class="col-5 text-end fs-5 fw-bold" id="total">₡0</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn btn-maintenance-back">
+                <i class="bi bi-arrow-left"></i> Regresar
+            </a>
+            <button type="submit" class="btn btn-primary">Registrar factura</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const opcionesFactura = @Html.Raw(JsonSerializer.Serialize(opciones));
+        const lineasIniciales = @Html.Raw(JsonSerializer.Serialize(Model.Factura.Lineas));
+        const formatoMoneda = value => `₡${Number(value).toLocaleString('es-CR', { maximumFractionDigits: 2 })}`;
+        let indice = 0;
+
+        function opcionesHtml(valor) {
+            return `<option value="">Seleccione un producto o servicio</option>` +
+                opcionesFactura.map(item =>
+                    `<option value="${item.tipo}:${item.id}" data-price="${item.precio}" ${valor === `${item.tipo}:${item.id}` ? 'selected' : ''}>${item.nombre}</option>`
+                ).join('');
+        }
+
+        function recalcular() {
+            let subtotal = 0;
+            document.querySelectorAll('#tablaLineas tbody tr').forEach(row => {
+                const option = row.querySelector('.linea-tipo option:checked');
+                const precio = Number(option?.dataset.price || 0);
+                const cantidad = Number(row.querySelector('.linea-cantidad').value || 0);
+                const parcial = precio * cantidad;
+                subtotal += parcial;
+                row.querySelector('.linea-precio').textContent = formatoMoneda(precio);
+                row.querySelector('.linea-subtotal').textContent = formatoMoneda(parcial);
+            });
+            const impuesto = subtotal * 0.13;
+            document.getElementById('subtotal').textContent = formatoMoneda(subtotal);
+            document.getElementById('impuesto').textContent = formatoMoneda(impuesto);
+            document.getElementById('total').textContent = formatoMoneda(subtotal + impuesto);
+        }
+
+        function agregarLinea(tipoId = '') {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <select class="form-select linea-tipo">${opcionesHtml(tipoId)}</select>
+                    <input type="hidden" name="Factura.Lineas[${indice}].ServicioId" class="linea-servicio" />
+                    <input type="hidden" name="Factura.Lineas[${indice}].ProductoId" class="linea-producto" />
+                </td>
+                <td><input type="number" min="0" step="0.01" value="1"
+                           name="Factura.Lineas[${indice}].Cantidad"
+                           class="form-control linea-cantidad" /></td>
+                <td class="text-end linea-precio">₡0</td>
+                <td class="text-end linea-subtotal">₡0</td>
+                <td><button type="button" class="btn btn-outline-danger btn-sm quitar-linea"><i class="bi bi-trash"></i></button></td>`;
+            document.querySelector('#tablaLineas tbody').appendChild(row);
+            const select = row.querySelector('.linea-tipo');
+            const actualizar = () => {
+                const [tipo, id] = (select.value || ':').split(':');
+                row.querySelector('.linea-servicio').value = tipo === 'servicio' ? id : '';
+                row.querySelector('.linea-producto').value = tipo === 'producto' ? id : '';
+                recalcular();
+            };
+            select.addEventListener('change', actualizar);
+            row.querySelector('.linea-cantidad').addEventListener('input', recalcular);
+            row.querySelector('.quitar-linea').addEventListener('click', () => {
+                row.remove();
+                recalcular();
+            });
+            actualizar();
+            indice++;
+        }
+
+        document.getElementById('agregarLinea').addEventListener('click', () => agregarLinea());
+        document.getElementById('clienteFactura').addEventListener('change', event => {
+            const option = event.target.options[event.target.selectedIndex];
+            document.getElementById('correoCliente').textContent =
+                option.dataset.email ? `Correo: ${option.dataset.email}` : 'Seleccione un cliente para ver su correo.';
+        });
+
+        if (lineasIniciales.length > 0) {
+            lineasIniciales.forEach(linea => agregarLinea(
+                linea.servicioId ? `servicio:${linea.servicioId}` : `producto:${linea.productoId}`));
+            document.querySelectorAll('.linea-cantidad').forEach((input, index) => input.value = lineasIniciales[index].cantidad);
+            recalcular();
+        } else {
+            agregarLinea();
+        }
+    </script>
+}

@@ -13,7 +13,9 @@
         <div class="text-end">
             <h4>@Model.NumeroFactura</h4>
             <p class="mb-0">@Model.FechaEmision.ToString("dd-MM-yyyy HH:mm")</p>
-            <span class="badge bg-success">@Model.EstadoFactura</span>
+            <span class="badge @(Model.EsProforma ? "bg-warning text-dark" : "bg-success")">
+                @Model.EstadoFactura
+            </span>
         </div>
     </div>
 
@@ -24,6 +26,7 @@
             <h5>Cliente</h5>
             <p class="mb-1"><strong>Nombre:</strong> @Model.ClienteNombre</p>
             <p class="mb-1"><strong>Identificación:</strong> @Model.ClienteIdentificacion</p>
+            <p class="mb-1"><strong>Correo:</strong> @Model.ClienteCorreo</p>
         </div>
         <div class="col-md-6">
             <h5>Sucursal</h5>
@@ -75,3 +78,14 @@
     <i class="bi bi-arrow-return-left"></i>
     Regresar al listado
 </a>
+
+@if (Model.EsProforma)
+{
+    <form asp-action="ConvertirProforma" asp-route-id="@Model.FacturaId"
+          method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-check2-circle"></i> Registrar factura
+        </button>
+    </form>
+}

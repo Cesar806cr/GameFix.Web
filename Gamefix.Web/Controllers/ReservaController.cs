@@ -1,4 +1,6 @@
 using Gamefix.Application.Services.Interfaces;
+using Gamefix.Application.DTOs;
+using Gamefix.Web.Util;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList.Extensions;
 
@@ -6,32 +8,8 @@ namespace Gamefix.Web.Controllers;
 
 public class ReservaController : Controller
 {
-    private const int SucursalEncargadoId = 1;
-
-
-    // Esto hace que solo se muestren las reservas de la sucursal con ID 1, que es la sucursal del encargado logueado.
-
-
-    //Un encargado solo debe verlas citas de la sucursal a la que pertenece.
-
-
-    //Eso significa que el historial de reservas debe comportarse como el sistema de un encargado de sucursal, no como un listado donde el usuario pueda escoger cualquier sucursal.
-
-    //1. El encargado debe establecerse en este controlador.
-    //La aplicación debe saber qué encargado está utilizando el sistema y qué sucursal tiene asignada. Esa información debe estar definida en el código del controlador o venir de una sesión/autenticación segura.
-
-    //No debe recibirse desde la URl.
-
-    //significa que el encargado simulado pertenece a la sucursal con ID 1.
-
-    //Por lo tanto, actualmente se está usando: como la sucursal del encargado.
-
-    //2. El encargado solo debe ver las citas de su sucursal
-
-    //Si el encargado pertenece a Alajuela, solo debería ver reservas de Alajuela yviceversa.
-
-    //No debería ver reservas de heredia y san jose.
-
+    private const int SucursalEncargadoId = 4;
+    private const int UsuarioEncargadoId = 15;
 
 
     private readonly IServiceReserva _serviceReserva;
@@ -41,9 +19,17 @@ public class ReservaController : Controller
         _serviceReserva = serviceReserva;
     }
 
-    public async Task<IActionResult> Index(int? page)
+    public async Task<IActionResult> Index(int? page, int? clienteId, DateTime? fecha)
     {
-        var reservas = await _serviceReserva.ListBySucursalAsync(SucursalEncargadoId);
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.NotificationMessage = TempData["Mensaje"];
+
+        var reservas = await _serviceReserva.ListBySucursalAsync(
+            SucursalEncargadoId, clienteId, fecha);
+        var formulario = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);
+        ViewBag.Clientes = formulario.Clientes;
+        ViewBag.ClienteId = clienteId;
+        ViewBag.Fecha = fecha?.ToString("yyyy-MM-dd");
         return View(reservas.ToPagedList(page ?? 1, 5));
     }
 
@@ -51,5 +37,42 @@ public class ReservaController : Controller
     {
         var reserva = await _serviceReserva.FindByIdAsync(id, SucursalEncargadoId);
         return reserva == null ? NotFound() : View(reserva);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        var formulario = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);
+        return View(formulario);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ReservaFormularioDTO formulario)
+    {
+        if (!ModelState.IsValid)
+        {
+            var datos = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);
+            formulario.SucursalNombre = datos.SucursalNombre;
+            formulario.Clientes = datos.Clientes;
+            formulario.Servicios = datos.Servicios;
+            return View(formulario);
+        }
+
+        var resultado = await _serviceReserva.CreateAsync(
+            formulario.Reserva, SucursalEncargadoId, UsuarioEncargadoId);
+        if (!resultado.Exito)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Mensaje);
+            var datos = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);
+            formulario.SucursalNombre = datos.SucursalNombre;
+            formulario.Clientes = datos.Clientes;
+            formulario.Servicios = datos.Servicios;
+            return View(formulario);
+        }
+
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            "Reserva registrada", resultado.Mensaje, SweetAlertMessageType.success);
+        return RedirectToAction(nameof(Index));
     }
 }

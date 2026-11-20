@@ -10,6 +10,7 @@ public record ServicioDTO
      StringLength(120, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 120 caracteres.")]
     public string Nombre { get; set; } = string.Empty;
 
+    [Display(Name = "Descripción")]
     [StringLength(500, ErrorMessage = "La descripción no puede superar los 500 caracteres.")]
     public string? Descripcion { get; set; }
 
@@ -17,19 +18,24 @@ public record ServicioDTO
     [Required(ErrorMessage = "El precio es requerido")]
     public decimal Precio { get; set; }
 
+    [Display(Name = "Duración en minutos")]
     [Range(1, 1440, ErrorMessage = "La duración del servicio tiene que estar entre 1 y 1440 minutos.")]
     [Required(ErrorMessage = "La duración del servicio es requerida")]
     public int DuracionMinutos { get; set; }
 
+    [Display(Name = "Consola compatible")]
     [Required(ErrorMessage = "Escriba el nombre de una consola compatible"),
      StringLength(150, ErrorMessage = "La consola compatible no puede superar los 150 caracteres.")]
     public string ConsolaCompatible { get; set; } = string.Empty;
 
+    [Display(Name = "Nivel de dificultad")]
     [Required(ErrorMessage = "El nivel de dificultad es obligatorio.")]
     public string NivelDificultad { get; set; } = string.Empty;
 
+    [Display(Name = "Requiere diagnóstico")]
     public bool RequiereDiagnostico { get; set; }
 
+    [Display(Name = "Garantía en días")]
     [Range(0, 3650, ErrorMessage = "El valor debe estar entre 0 y 3650.")]
     [Required(ErrorMessage = "La garantía en días es requerida")]
     public int GarantiaDias { get; set; }

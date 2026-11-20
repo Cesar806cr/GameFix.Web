@@ -15,6 +15,16 @@ public class ReservaProfile : Profile
                 opt => opt.MapFrom(src => src.Servicio.Nombre))
             .ForMember(dest => dest.ClienteNombre,
                 opt => opt.MapFrom(src => src.Cliente.Nombre))
+            .ForMember(dest => dest.ClienteCorreo,
+                opt => opt.MapFrom(src => src.Cliente.CorreoElectronico))
+            .ForMember(dest => dest.ClienteId,
+                opt => opt.MapFrom(src => src.ClienteId))
+            .ForMember(dest => dest.ServicioId,
+                opt => opt.MapFrom(src => src.ServicioId))
+            .ForMember(dest => dest.ServicioPrecio,
+                opt => opt.MapFrom(src => src.Servicio.Precio))
+            .ForMember(dest => dest.DuracionMinutos,
+                opt => opt.MapFrom(src => src.Servicio.DuracionMinutos))
             .ForMember(dest => dest.EstadoNombre,
                 opt => opt.MapFrom(src => src.EstadoReserva.Nombre))
             .ForMember(dest => dest.EstadoColor,
