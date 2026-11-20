@@ -55,9 +55,10 @@
                        min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
                 <span asp-validation-for="Reserva.Fecha" class="text-danger"></span>
             </div>
-            <div class="col-md-6 form-group">
-                <label asp-for="Reserva.HoraInicio" class="form-label">Hora de inicio</label>
-                <input asp-for="Reserva.HoraInicio" type="time" step="3600" class="form-control" />
+            <div class="col-12 form-group">
+                <label class="form-label">Hora de inicio</label>
+                <input asp-for="Reserva.HoraInicio" type="hidden" id="horaInicio" />
+                <div id="horasDisponibles" class="reservation-hours"></div>
                 <span asp-validation-for="Reserva.HoraInicio" class="text-danger"></span>
             </div>
         </div>
@@ -107,6 +108,9 @@
     <script>
         const cliente = document.getElementById('cliente');
         const servicio = document.getElementById('servicio');
+        const fecha = document.querySelector('[name="Reserva.Fecha"]');
+        const horasDisponibles = document.getElementById('horasDisponibles');
+        const horaInicio = document.getElementById('horaInicio');
 
         cliente.addEventListener('change', () => {
             const option = cliente.options[cliente.selectedIndex];
@@ -120,6 +124,46 @@
             document.getElementById('servicioInfo').textContent =
                 minutos > 0 ? `Duración: ${minutos} minutos. Tarifa: ₡${Number(option.dataset.price).toLocaleString('es-CR')}` :
                 'Seleccione un servicio para ver su duración.';
+            cargarHoras();
         });
+
+        fecha.addEventListener('change', cargarHoras);
+
+        async function cargarHoras() {
+            horaInicio.value = '';
+            horasDisponibles.innerHTML = '';
+
+            if (!fecha.value || Number(servicio.value || 0) === 0) {
+                horasDisponibles.innerHTML = '';
+                return;
+            }
+
+            horasDisponibles.innerHTML =
+                '<p class="reservation-hours-message text-secondary">Consultando disponibilidad...</p>';
+
+            const respuesta = await fetch(
+                `@Url.Action("HorasDisponibles", "Reserva")?fecha=${encodeURIComponent(fecha.value)}&servicioId=${encodeURIComponent(servicio.value)}`);
+            const horas = await respuesta.json();
+
+            if (horas.length === 0) {
+                horasDisponibles.innerHTML =
+                    '<p class="reservation-hours-message text-secondary">No hay horas disponibles para esta fecha y servicio.</p>';
+                return;
+            }
+
+            horas.forEach(hora => {
+                const boton = document.createElement('button');
+                boton.type = 'button';
+                boton.className = 'reservation-hour';
+                boton.textContent = hora;
+                boton.addEventListener('click', () => {
+                    document.querySelectorAll('.reservation-hour.active')
+                        .forEach(item => item.classList.remove('active'));
+                    boton.classList.add('active');
+                    horaInicio.value = hora;
+                });
+                horasDisponibles.appendChild(boton);
+            });
+        }
     </script>
 }

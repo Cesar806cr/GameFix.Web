@@ -9,6 +9,8 @@ public interface IRepositoryReserva
     Task<ICollection<Usuario>> ListClientesAsync();
     Task<ICollection<Servicio>> ListServiciosAsync();
     Task<Sucursal?> FindSucursalAsync(int sucursalId);
+    Task<string> GenerateProformaNumeroAsync();
+    Task<string> GenerateReservaCodigoAsync();
     Task<bool> HorarioDisponibleAsync(int sucursalId, DateTime inicio, DateTime fin);
     Task AddAsync(Reserva reserva, Factura proforma);
 }

@@ -57,7 +57,17 @@
                 <td>@item.FechaEmision.ToString("dd-MM-yyyy")</td>
                 <td>@item.ClienteNombre</td>
                 <td>
-                    <span class="badge @(item.EsProforma ? "bg-warning text-dark" : "bg-success")">
+                    @{
+                        var estadoColor = item.EstadoFactura switch
+                        {
+                            "Proforma" or "Pendiente" => "#F1C40F",
+                            "Pagada" => "#3498DB",
+                            "Anulada" => "#E74C3C",
+                            _ => "#6c757d"
+                        };
+                    }
+                    <span class="badge reservation-status"
+                          style="background-color:@estadoColor">
                         @item.EstadoFactura
                     </span>
                 </td>
@@ -66,7 +76,6 @@
                     <a asp-action="Details"
                        asp-route-id="@item.FacturaId"
                        class="btn btn-info btn-sm">
-                        <i class="bi bi-eye"></i>
                         Detalle
                     </a>
                 </td>

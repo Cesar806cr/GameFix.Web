@@ -13,9 +13,31 @@
         <div class="text-end">
             <h4>@Model.NumeroFactura</h4>
             <p class="mb-0">@Model.FechaEmision.ToString("dd-MM-yyyy HH:mm")</p>
-            <span class="badge @(Model.EsProforma ? "bg-warning text-dark" : "bg-success")">
-                @Model.EstadoFactura
-            </span>
+            <form asp-action="UpdateEstado" method="post" class="d-flex align-items-end gap-2 mt-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.FacturaId" />
+                <label for="estadoFactura" class="form-label mb-0">Estado</label>
+                <select id="estadoFactura" name="estado" class="form-select form-select-sm">
+                    <option value="Proforma" data-color="#F1C40F" selected="@(Model.EstadoFactura == "Proforma")">Proforma</option>
+                    <option value="Pendiente" data-color="#F1C40F" selected="@(Model.EstadoFactura == "Pendiente")">Pendiente</option>
+                    <option value="Pagada" data-color="#3498DB" selected="@(Model.EstadoFactura == "Pagada")">Pagada</option>
+                    <option value="Anulada" data-color="#E74C3C" selected="@(Model.EstadoFactura == "Anulada")">Anulada</option>
+                </select>
+                @{
+                    var estadoFacturaColor = Model.EstadoFactura switch
+                    {
+                        "Proforma" or "Pendiente" => "#F1C40F",
+                        "Pagada" => "#3498DB",
+                        "Anulada" => "#E74C3C",
+                        _ => "#6c757d"
+                    };
+                }
+                <span id="estadoFacturaBadge" class="badge reservation-status"
+                      style="background-color:@estadoFacturaColor">
+                    @Model.EstadoFactura
+                </span>
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+            </form>
         </div>
     </div>
 
@@ -79,13 +101,16 @@
     Regresar al listado
 </a>
 
-@if (Model.EsProforma)
-{
-    <form asp-action="ConvertirProforma" asp-route-id="@Model.FacturaId"
-          method="post" class="d-inline">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-success">
-            <i class="bi bi-check2-circle"></i> Registrar factura
-        </button>
-    </form>
+@section Scripts {
+    <script>
+        const estadoFacturaDetalle = document.getElementById('estadoFactura');
+        const estadoFacturaBadgeDetalle = document.getElementById('estadoFacturaBadge');
+
+        estadoFacturaDetalle.addEventListener('change', () => {
+            const option = estadoFacturaDetalle.options[estadoFacturaDetalle.selectedIndex];
+            estadoFacturaBadgeDetalle.style.backgroundColor = option.dataset.color || '#6c757d';
+            estadoFacturaBadgeDetalle.textContent = estadoFacturaDetalle.value;
+        });
+    </script>
 }
+

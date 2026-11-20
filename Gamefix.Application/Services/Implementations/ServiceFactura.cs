@@ -58,6 +58,7 @@ public class ServiceFactura : IServiceFactura
             {
                 ClienteId = proforma.ClienteId,
                 ReservaId = proforma.ReservaId,
+                EstadoFactura = "Proforma",
                 Lineas = proforma.DetalleFactura
                     .Select(detalle => new FacturaLineaDTO
                     {
@@ -75,6 +76,13 @@ public class ServiceFactura : IServiceFactura
     public async Task<(bool Exito, string Mensaje)> CreateAsync(
         FacturaCrearDTO dto, int sucursalId, int usuarioRegistroId)
     {
+        var estadosPermitidos = new[]
+        {
+            "Proforma", "Pendiente", "Pagada", "Anulada"
+        };
+        if (!estadosPermitidos.Contains(dto.EstadoFactura))
+            return (false, "El estado seleccionado no es válido.");
+
         var productosDisponibles = (await _repository.ListProductosAsync())
             .ToDictionary(item => item.ProductoId);
         var productoSinExistencia = dto.Lineas.FirstOrDefault(linea =>
@@ -93,19 +101,19 @@ public class ServiceFactura : IServiceFactura
         var impuesto = Math.Round(subtotal * porcentajeImpuesto / 100m, 2);
         var factura = new Factura
         {
-            NumeroFactura = $"FAC-{Guid.NewGuid():N}"[..20].ToUpperInvariant(),
+            NumeroFactura = await _repository.GenerateNumeroAsync(dto.EstadoFactura == "Proforma"),
             ReservaId = dto.ReservaId,
             ClienteId = dto.ClienteId,
             SucursalId = sucursalId,
             UsuarioRegistroId = usuarioRegistroId,
             FechaEmision = DateTime.Now,
-            EsProforma = false,
-            EstadoFactura = "Facturado",
+            EsProforma = dto.EstadoFactura == "Proforma",
+            EstadoFactura = dto.EstadoFactura,
             PorcentajeImpuesto = porcentajeImpuesto,
             Subtotal = subtotal,
             Impuesto = impuesto,
             Total = subtotal + impuesto,
-            FechaPago = DateTime.Now,
+            FechaPago = dto.EstadoFactura == "Pagada" ? DateTime.Now : null,
             CorreoEnviado = false
         };
         factura.DetalleFactura = lineas;
@@ -124,13 +132,34 @@ public class ServiceFactura : IServiceFactura
             return (false, "La factura seleccionada ya está facturada.");
 
         factura.EsProforma = false;
-        factura.EstadoFactura = "Facturado";
+        factura.EstadoFactura = "Pendiente";
         factura.FechaEmision = DateTime.Now;
-        factura.FechaPago = DateTime.Now;
+        factura.FechaPago = null;
         factura.UsuarioRegistroId = usuarioRegistroId;
-        factura.NumeroFactura = $"FAC-{Guid.NewGuid():N}"[..20].ToUpperInvariant();
+        factura.NumeroFactura = await _repository.GenerateNumeroAsync(false);
         await _repository.UpdateAsync(factura);
         return (true, $"La factura {factura.NumeroFactura} fue registrada correctamente.");
+    }
+
+    public async Task<(bool Exito, string Mensaje)> UpdateEstadoAsync(
+        int id, string estado, int sucursalId)
+    {
+        var factura = await _repository.FindByIdAsync(id, sucursalId);
+        if (factura is null)
+            return (false, "La factura no existe.");
+
+        var estadosPermitidos = new[]
+        {
+            "Proforma", "Pendiente", "Pagada", "Anulada"
+        };
+        if (!estadosPermitidos.Contains(estado))
+            return (false, "El estado seleccionado no es válido.");
+
+        factura.EstadoFactura = estado;
+        factura.EsProforma = estado == "Proforma";
+        factura.FechaPago = estado == "Pagada" ? DateTime.Now : null;
+        await _repository.UpdateAsync(factura);
+        return (true, $"El estado se cambió a {estado}.");
     }
 
     private async Task<List<DetalleFactura>> BuildDetailsAsync(

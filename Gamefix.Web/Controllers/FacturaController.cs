@@ -8,8 +8,8 @@ namespace Gamefix.Web.Controllers;
 
 public class FacturaController : Controller
 {
-    private const int SucursalEncargadoId = 4;
-    private const int UsuarioEncargadoId = 15;
+    private const int SucursalEncargadoId = 2;
+    private const int UsuarioEncargadoId = 3;
     private readonly IServiceFactura _serviceFactura;
 
     public FacturaController(IServiceFactura serviceFactura)
@@ -93,6 +93,19 @@ public class FacturaController : Controller
             id, SucursalEncargadoId, UsuarioEncargadoId);
         TempData["Mensaje"] = SweetAlertHelper.Mensaje(
             resultado.Exito ? "Factura registrada" : "No se pudo registrar",
+            resultado.Mensaje,
+            resultado.Exito ? SweetAlertMessageType.success : SweetAlertMessageType.error);
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateEstado(int id, string estado)
+    {
+        var resultado = await _serviceFactura.UpdateEstadoAsync(
+            id, estado, SucursalEncargadoId);
+        TempData["Mensaje"] = SweetAlertHelper.Mensaje(
+            resultado.Exito ? "Estado actualizado" : "No se pudo actualizar",
             resultado.Mensaje,
             resultado.Exito ? SweetAlertMessageType.success : SweetAlertMessageType.error);
         return RedirectToAction(nameof(Details), new { id });

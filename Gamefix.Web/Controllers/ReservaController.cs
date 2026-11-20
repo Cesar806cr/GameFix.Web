@@ -8,8 +8,8 @@ namespace Gamefix.Web.Controllers;
 
 public class ReservaController : Controller
 {
-    private const int SucursalEncargadoId = 4;
-    private const int UsuarioEncargadoId = 15;
+    private const int SucursalEncargadoId = 2;
+    private const int UsuarioEncargadoId = 3;
 
 
     private readonly IServiceReserva _serviceReserva;
@@ -44,6 +44,14 @@ public class ReservaController : Controller
     {
         var formulario = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);
         return View(formulario);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> HorasDisponibles(DateOnly fecha, int servicioId)
+    {
+        var horas = await _serviceReserva.GetHorasDisponiblesAsync(
+            SucursalEncargadoId, fecha, servicioId);
+        return Json(horas);
     }
 
     [HttpPost]

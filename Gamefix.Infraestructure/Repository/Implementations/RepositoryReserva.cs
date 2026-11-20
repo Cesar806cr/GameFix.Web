@@ -62,6 +62,46 @@ public class RepositoryReserva : IRepositoryReserva
             .AsNoTracking()
             .FirstOrDefaultAsync(sucursal => sucursal.SucursalId == sucursalId && sucursal.Activa);
 
+    public async Task<string> GenerateProformaNumeroAsync()
+    {
+        const string prefijoNumeroProforma = "PRO-";
+        var numeros = await _context.Factura
+            .Where(factura => factura.NumeroFactura.StartsWith(prefijoNumeroProforma))
+            .Select(factura => factura.NumeroFactura)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var siguiente = numeros
+            .Select(numero => numero.Length > prefijoNumeroProforma.Length &&
+                              int.TryParse(numero[prefijoNumeroProforma.Length..], out var valor)
+                ? valor
+                : 0)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        return $"{prefijoNumeroProforma}{siguiente:0000}";
+    }
+
+    public async Task<string> GenerateReservaCodigoAsync()
+    {
+        const string prefijoCodigoReserva = "RES-";
+        var codigos = await _context.Reserva
+            .Where(reserva => reserva.CodigoReserva.StartsWith(prefijoCodigoReserva))
+            .Select(reserva => reserva.CodigoReserva)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var siguiente = codigos
+            .Select(codigo => codigo.Length > prefijoCodigoReserva.Length &&
+                              int.TryParse(codigo[prefijoCodigoReserva.Length..], out var valor)
+                ? valor
+                : 0)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        return $"{prefijoCodigoReserva}{siguiente:0000}";
+    }
+
     public async Task<bool> HorarioDisponibleAsync(int sucursalId, DateTime inicio, DateTime fin)
     {
         var fecha = DateOnly.FromDateTime(inicio);

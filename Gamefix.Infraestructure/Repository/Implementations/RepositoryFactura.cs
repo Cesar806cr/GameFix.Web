@@ -73,6 +73,26 @@ public class RepositoryFactura : IRepositoryFactura
             .AsNoTracking()
             .ToListAsync();
 
+    public async Task<string> GenerateNumeroAsync(bool esProforma)
+    {
+        var prefijoNumeroFactura = esProforma ? "PRO-" : "FAC-";
+        var numeros = await _context.Factura
+            .Where(factura => factura.NumeroFactura.StartsWith(prefijoNumeroFactura))
+            .Select(factura => factura.NumeroFactura)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var siguiente = numeros
+            .Select(numero => numero.Length > prefijoNumeroFactura.Length &&
+                              int.TryParse(numero[prefijoNumeroFactura.Length..], out var valor)
+                ? valor
+                : 0)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        return $"{prefijoNumeroFactura}{siguiente:0000}";
+    }
+
     public async Task AddAsync(Factura factura)
     {
         _context.Factura.Add(factura);

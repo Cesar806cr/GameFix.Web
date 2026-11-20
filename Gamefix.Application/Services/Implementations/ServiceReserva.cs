@@ -44,6 +44,29 @@ public class ServiceReserva : IServiceReserva
         };
     }
 
+    public async Task<ICollection<string>> GetHorasDisponiblesAsync(
+        int sucursalId, DateOnly fecha, int servicioId)
+    {
+        var servicio = (await _repository.ListServiciosAsync())
+            .FirstOrDefault(item => item.ServicioId == servicioId);
+        if (servicio is null)
+            return [];
+
+        var horas = new List<string>();
+        for (var hora = 8; hora <= 18; hora++)
+        {
+            var inicio = fecha.ToDateTime(new TimeOnly(hora, 0));
+            var fin = inicio.AddMinutes(servicio.DuracionMinutos);
+            if (fecha == DateOnly.FromDateTime(DateTime.Today) &&
+                inicio <= DateTime.Now)
+                continue;
+            if (await _repository.HorarioDisponibleAsync(sucursalId, inicio, fin))
+                horas.Add(new TimeOnly(hora, 0).ToString("HH:mm"));
+        }
+
+        return horas;
+    }
+
     public async Task<(bool Exito, string Mensaje)> CreateAsync(
         ReservaCrearDTO dto, int sucursalId, int usuarioRegistroId)
     {
@@ -65,7 +88,7 @@ public class ServiceReserva : IServiceReserva
 
         var reserva = new Reserva
         {
-            CodigoReserva = $"RES-{Guid.NewGuid():N}"[..20].ToUpperInvariant(),
+            CodigoReserva = await _repository.GenerateReservaCodigoAsync(),
             ClienteId = dto.ClienteId,
             SucursalId = sucursalId,
             ServicioId = dto.ServicioId,
@@ -90,7 +113,7 @@ public class ServiceReserva : IServiceReserva
         var impuesto = Math.Round(subtotal * porcentajeImpuesto / 100m, 2);
         var proforma = new Factura
         {
-            NumeroFactura = $"PRO-{Guid.NewGuid():N}"[..20].ToUpperInvariant(),
+            NumeroFactura = await _repository.GenerateProformaNumeroAsync(),
             ClienteId = dto.ClienteId,
             SucursalId = sucursalId,
             UsuarioRegistroId = usuarioRegistroId,

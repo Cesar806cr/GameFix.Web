@@ -168,3 +168,45 @@ body {
 .text-danger {
     color: #ffc107 !important;
 }
+
+.reservation-hours {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: .6rem;
+  margin-top: .25rem;
+}
+
+.reservation-hours-message {
+  grid-column: 1 / -1;
+  margin: .35rem 0 .75rem;
+  line-height: 1.5;
+}
+
+.reservation-hour {
+  min-height: 44px;
+  border: 1px solid var(--bs-border-color);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-radius: .35rem;
+  font-weight: 600;
+}
+
+.reservation-hour:hover,
+.reservation-hour:focus {
+  border-color: #258cfb;
+  background-color: rgba(37, 140, 251, .12);
+  color: var(--bs-body-color);
+}
+
+.reservation-hour.active {
+  border-color: #258cfb;
+  background-color: #258cfb;
+  color: #fff;
+}
+
+.reservation-hour:disabled {
+  border-color: var(--bs-border-color);
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-secondary-color);
+  opacity: .65;
+}

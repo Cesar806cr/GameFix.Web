@@ -5,7 +5,6 @@
     ViewData["Title"] = "Registrar factura";
     var servicios = Model.Servicios.Select(item => new { id = item.ServicioId, nombre = item.Nombre, precio = item.Precio, tipo = "servicio" });
     var productos = Model.Productos.Select(item => new { id = item.ProductoId, nombre = item.Nombre, precio = item.Precio, tipo = "producto" });
-    var opciones = servicios.Concat(productos).ToList();
 }
 
 <div class="maintenance-form-page">
@@ -43,6 +42,19 @@
                 <label class="form-label">Encargado</label>
                 <input class="form-control" value="@Model.EncargadoNombre" readonly />
             </div>
+            <div class="col-md-6 form-group">
+                <label asp-for="Factura.EstadoFactura" class="form-label">Estado</label>
+                <select asp-for="Factura.EstadoFactura" class="form-select" id="estadoFactura">
+                    <option value="Pendiente" data-color="#F1C40F">Pendiente</option>
+                    <option value="Pagada" data-color="#3498DB">Pagada</option>
+                    <option value="Anulada" data-color="#E74C3C">Anulada</option>
+                    @if (Model.Factura.ReservaId.HasValue)
+                    {
+                        <option value="Proforma" data-color="#F1C40F">Proforma</option>
+                    }
+                </select>
+                <span asp-validation-for="Factura.EstadoFactura" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="maintenance-section d-flex justify-content-between align-items-center">
@@ -55,9 +67,8 @@
             <table class="table align-middle" id="tablaLineas">
                 <thead>
                     <tr>
-                        <th>Producto o servicio</th>
-                        <th style="width: 130px;">Cantidad</th>
-                        <th class="text-end">Precio</th>
+                        <th>Servicio y producto adicional</th>
+                        <th style="width: 180px;">Cantidad</th>
                         <th class="text-end">Subtotal</th>
                         <th></th>
                     </tr>
@@ -91,27 +102,38 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        const opcionesFactura = @Html.Raw(JsonSerializer.Serialize(opciones));
+        const serviciosFactura = @Html.Raw(JsonSerializer.Serialize(servicios));
+        const productosFactura = @Html.Raw(JsonSerializer.Serialize(productos));
         const lineasIniciales = @Html.Raw(JsonSerializer.Serialize(Model.Factura.Lineas));
         const formatoMoneda = value => `₡${Number(value).toLocaleString('es-CR', { maximumFractionDigits: 2 })}`;
-        let indice = 0;
 
-        function opcionesHtml(valor) {
-            return `<option value="">Seleccione un producto o servicio</option>` +
-                opcionesFactura.map(item =>
-                    `<option value="${item.tipo}:${item.id}" data-price="${item.precio}" ${valor === `${item.tipo}:${item.id}` ? 'selected' : ''}>${item.nombre}</option>`
+        function serviciosHtml(valor) {
+            return `<option value="">Seleccione un servicio</option>` +
+                serviciosFactura.map(item =>
+                    `<option value="${item.id}" data-price="${item.precio}" ${valor === item.id ? 'selected' : ''}>${item.nombre}</option>`
+                ).join('');
+        }
+
+        function productosHtml(valor) {
+            return `<option value="">Ninguno</option>` +
+                productosFactura.map(item =>
+                    `<option value="${item.id}" data-price="${item.precio}" ${valor === item.id ? 'selected' : ''}>${item.nombre}</option>`
                 ).join('');
         }
 
         function recalcular() {
             let subtotal = 0;
             document.querySelectorAll('#tablaLineas tbody tr').forEach(row => {
-                const option = row.querySelector('.linea-tipo option:checked');
-                const precio = Number(option?.dataset.price || 0);
-                const cantidad = Number(row.querySelector('.linea-cantidad').value || 0);
-                const parcial = precio * cantidad;
+                const servicioOption = row.querySelector('.linea-servicio option:checked');
+                const productoOption = row.querySelector('.linea-producto option:checked');
+                const cantidadServicio = Number(row.querySelector('.cantidad-servicio').value || 0);
+                const cantidadProducto = Number(row.querySelector('.cantidad-producto').value || 0);
+                const subtotalServicio =
+                    Number(servicioOption?.dataset.price || 0) * cantidadServicio;
+                const subtotalProducto =
+                    Number(productoOption?.dataset.price || 0) * cantidadProducto;
+                const parcial = subtotalServicio + subtotalProducto;
                 subtotal += parcial;
-                row.querySelector('.linea-precio').textContent = formatoMoneda(precio);
                 row.querySelector('.linea-subtotal').textContent = formatoMoneda(parcial);
             });
             const impuesto = subtotal * 0.13;
@@ -120,36 +142,33 @@
             document.getElementById('total').textContent = formatoMoneda(subtotal + impuesto);
         }
 
-        function agregarLinea(tipoId = '') {
+        function agregarLinea(servicioId = 0, productoId = 0, cantidad = 1) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>
-                    <select class="form-select linea-tipo">${opcionesHtml(tipoId)}</select>
-                    <input type="hidden" name="Factura.Lineas[${indice}].ServicioId" class="linea-servicio" />
-                    <input type="hidden" name="Factura.Lineas[${indice}].ProductoId" class="linea-producto" />
+                    <select class="form-select linea-servicio mb-2">${serviciosHtml(servicioId)}</select>
+                    <select class="form-select linea-producto">${productosHtml(productoId)}</select>
                 </td>
-                <td><input type="number" min="0" step="0.01" value="1"
-                           name="Factura.Lineas[${indice}].Cantidad"
-                           class="form-control linea-cantidad" /></td>
-                <td class="text-end linea-precio">₡0</td>
+                <td>
+                    <label class="form-label small mb-1">Servicio</label>
+                    <input type="number" min="0" step="1" value="${cantidad}"
+                           class="form-control cantidad-servicio mb-2" />
+                    <label class="form-label small mb-1">Producto</label>
+                    <input type="number" min="0" step="1" value="${cantidad}"
+                           class="form-control cantidad-producto" />
+                </td>
                 <td class="text-end linea-subtotal">₡0</td>
                 <td><button type="button" class="btn btn-outline-danger btn-sm quitar-linea"><i class="bi bi-trash"></i></button></td>`;
             document.querySelector('#tablaLineas tbody').appendChild(row);
-            const select = row.querySelector('.linea-tipo');
-            const actualizar = () => {
-                const [tipo, id] = (select.value || ':').split(':');
-                row.querySelector('.linea-servicio').value = tipo === 'servicio' ? id : '';
-                row.querySelector('.linea-producto').value = tipo === 'producto' ? id : '';
-                recalcular();
-            };
-            select.addEventListener('change', actualizar);
-            row.querySelector('.linea-cantidad').addEventListener('input', recalcular);
+            row.querySelector('.linea-servicio').addEventListener('change', recalcular);
+            row.querySelector('.linea-producto').addEventListener('change', recalcular);
+            row.querySelector('.cantidad-servicio').addEventListener('input', recalcular);
+            row.querySelector('.cantidad-producto').addEventListener('input', recalcular);
             row.querySelector('.quitar-linea').addEventListener('click', () => {
                 row.remove();
                 recalcular();
             });
-            actualizar();
-            indice++;
+            recalcular();
         }
 
         document.getElementById('agregarLinea').addEventListener('click', () => agregarLinea());
@@ -161,11 +180,37 @@
 
         if (lineasIniciales.length > 0) {
             lineasIniciales.forEach(linea => agregarLinea(
-                linea.servicioId ? `servicio:${linea.servicioId}` : `producto:${linea.productoId}`));
-            document.querySelectorAll('.linea-cantidad').forEach((input, index) => input.value = lineasIniciales[index].cantidad);
+                linea.servicioId || 0,
+                linea.productoId || 0,
+                linea.cantidad));
             recalcular();
         } else {
             agregarLinea();
         }
+
+        document.getElementById('facturaForm').addEventListener('submit', event => {
+            document.querySelectorAll('.linea-submit').forEach(input => input.remove());
+            let indice = 0;
+
+            document.querySelectorAll('#tablaLineas tbody tr').forEach(row => {
+                const servicioId = row.querySelector('.linea-servicio').value;
+                const productoId = row.querySelector('.linea-producto').value;
+                const cantidadServicio = Number(row.querySelector('.cantidad-servicio').value || 0);
+                const cantidadProducto = Number(row.querySelector('.cantidad-producto').value || 0);
+
+                if (servicioId && cantidadServicio > 0) {
+                    row.insertAdjacentHTML('beforeend',
+                        `<input class="linea-submit" type="hidden" name="Factura.Lineas[${indice}].ServicioId" value="${servicioId}" />
+                         <input class="linea-submit" type="hidden" name="Factura.Lineas[${indice}].Cantidad" value="${cantidadServicio}" />`);
+                    indice++;
+                }
+                if (productoId && cantidadProducto > 0) {
+                    row.insertAdjacentHTML('beforeend',
+                        `<input class="linea-submit" type="hidden" name="Factura.Lineas[${indice}].ProductoId" value="${productoId}" />
+                         <input class="linea-submit" type="hidden" name="Factura.Lineas[${indice}].Cantidad" value="${cantidadProducto}" />`);
+                    indice++;
+                }
+            });
+        });
     </script>
 }

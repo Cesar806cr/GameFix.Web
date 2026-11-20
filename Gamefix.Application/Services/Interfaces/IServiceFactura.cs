@@ -9,4 +9,5 @@ public interface IServiceFactura
     Task<FacturaFormularioDTO> GetFormularioAsync(int sucursalId, int usuarioRegistroId, int? proformaId = null);
     Task<(bool Exito, string Mensaje)> CreateAsync(FacturaCrearDTO dto, int sucursalId, int usuarioRegistroId);
     Task<(bool Exito, string Mensaje)> ConvertirProformaAsync(int id, int sucursalId, int usuarioRegistroId);
+    Task<(bool Exito, string Mensaje)> UpdateEstadoAsync(int id, string estado, int sucursalId);
 }

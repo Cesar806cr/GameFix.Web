@@ -40,14 +40,22 @@ public record FacturaCrearDTO
     [Range(1, int.MaxValue, ErrorMessage = "Seleccione un cliente.")]
     public int ClienteId { get; set; }
     public int? ReservaId { get; set; }
+
+    [Required(ErrorMessage = "Seleccione un estado.")]
+    [RegularExpression("Proforma|Pendiente|Pagada|Anulada",
+        ErrorMessage = "Seleccione un estado válido.")]
+    public string EstadoFactura { get; set; } = "Pendiente";
+
+    [MinLength(1, ErrorMessage = "Agregue al menos un producto o servicio.")]
     public List<FacturaLineaDTO> Lineas { get; set; } = [];
 }
 
 public record FacturaLineaDTO
 {
+    [Required(ErrorMessage = "El servicio es requerido")]
     public int? ServicioId { get; set; }
     public int? ProductoId { get; set; }
 
-    [Range(0, 9999, ErrorMessage = "La cantidad debe ser un número válido.")]
+    [Range(1, 9999, ErrorMessage = "La cantidad debe ser un número entero entre 1 y 9999.")]
     public decimal Cantidad { get; set; } = 1;
 }
