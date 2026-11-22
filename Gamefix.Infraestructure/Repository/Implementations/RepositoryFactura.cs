@@ -73,11 +73,13 @@ public class RepositoryFactura : IRepositoryFactura
             .AsNoTracking()
             .ToListAsync();
 
-    public async Task<string> GenerateNumeroAsync(bool esProforma)
+    public async Task<string> GenerateNumeroAsync(bool esProforma, int sucursalId)
     {
         var prefijoNumeroFactura = esProforma ? "PRO-" : "FAC-";
         var numeros = await _context.Factura
-            .Where(factura => factura.NumeroFactura.StartsWith(prefijoNumeroFactura))
+            .Where(factura =>
+                factura.SucursalId == sucursalId &&
+                factura.NumeroFactura.StartsWith(prefijoNumeroFactura))
             .Select(factura => factura.NumeroFactura)
             .AsNoTracking()
             .ToListAsync();

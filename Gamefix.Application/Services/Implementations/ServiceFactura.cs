@@ -117,7 +117,8 @@ public class ServiceFactura : IServiceFactura
         var impuesto = Math.Round(subtotal * porcentajeImpuesto / 100m, 2);
         var factura = new Factura
         {
-            NumeroFactura = await _repository.GenerateNumeroAsync(dto.EstadoFactura == "Proforma"),
+            NumeroFactura = await _repository.GenerateNumeroAsync(
+                dto.EstadoFactura == "Proforma", sucursalId),
             ReservaId = dto.ReservaId,
             ClienteId = dto.ClienteId,
             SucursalId = sucursalId,
@@ -152,7 +153,7 @@ public class ServiceFactura : IServiceFactura
         factura.FechaEmision = DateTime.Now;
         factura.FechaPago = null;
         factura.UsuarioRegistroId = usuarioRegistroId;
-        factura.NumeroFactura = await _repository.GenerateNumeroAsync(false);
+        factura.NumeroFactura = await _repository.GenerateNumeroAsync(false, sucursalId);
         await _repository.UpdateAsync(factura);
         return (true, $"La factura {factura.NumeroFactura} fue registrada correctamente.");
     }
@@ -171,8 +172,16 @@ public class ServiceFactura : IServiceFactura
         if (!estadosPermitidos.Contains(estado))
             return (false, "El estado seleccionado no es válido.");
 
+        if (!factura.EsProforma && estado == "Proforma")
+            return (false, "Una factura registrada no puede volver a Proforma.");
+
+        if (factura.EsProforma && estado != "Proforma")
+        {
+            factura.NumeroFactura = await _repository.GenerateNumeroAsync(false, sucursalId);
+            factura.EsProforma = false;
+        }
+
         factura.EstadoFactura = estado;
-        factura.EsProforma = estado == "Proforma";
         factura.FechaPago = estado == "Pagada" ? DateTime.Now : null;
         await _repository.UpdateAsync(factura);
         return (true, $"El estado se cambió a {estado}.");

@@ -11,7 +11,7 @@ public interface IRepositoryFactura
     Task<Sucursal?> FindSucursalAsync(int sucursalId);
     Task<ICollection<Servicio>> ListServiciosAsync();
     Task<ICollection<Producto>> ListProductosAsync();
-    Task<string> GenerateNumeroAsync(bool esProforma);
+    Task<string> GenerateNumeroAsync(bool esProforma, int sucursalId);
     Task AddAsync(Factura factura);
     Task UpdateAsync(Factura factura);
 }

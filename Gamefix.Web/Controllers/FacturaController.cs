@@ -8,8 +8,8 @@ namespace Gamefix.Web.Controllers;
 
 public class FacturaController : Controller
 {
-    private const int SucursalEncargadoId = 2;
-    private const int UsuarioEncargadoId = 3;
+    private const int SucursalEncargadoId = 1;
+    private const int UsuarioEncargadoId = 2;
     private readonly IServiceFactura _serviceFactura;
 
     public FacturaController(IServiceFactura serviceFactura)
