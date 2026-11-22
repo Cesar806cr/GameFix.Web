@@ -58,6 +58,13 @@ public class ReservaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ReservaFormularioDTO formulario)
     {
+        if (formulario.Reserva.Fecha < DateOnly.FromDateTime(DateTime.Today))
+        {
+            ModelState.AddModelError(
+                "Reserva.Fecha",
+                "La fecha de la reserva no puede ser anterior a la fecha actual.");
+        }
+
         if (!ModelState.IsValid)
         {
             var datos = await _serviceReserva.GetFormularioAsync(SucursalEncargadoId);

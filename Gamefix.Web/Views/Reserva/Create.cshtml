@@ -51,7 +51,8 @@
             </div>
             <div class="col-md-6 form-group">
                 <label asp-for="Reserva.Fecha" class="form-label">Fecha</label>
-                <input asp-for="Reserva.Fecha" type="date" class="form-control" />
+                <input asp-for="Reserva.Fecha" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       lang="es" class="form-control" />
                 <span asp-validation-for="Reserva.Fecha" class="text-danger"></span>
             </div>
             <div class="col-12 form-group">
@@ -110,6 +111,14 @@
         const fecha = document.querySelector('[name="Reserva.Fecha"]');
         const horasDisponibles = document.getElementById('horasDisponibles');
         const horaInicio = document.getElementById('horaInicio');
+
+        fecha.setCustomValidity('');
+        fecha.addEventListener('invalid', () => {
+            if (fecha.validity.rangeUnderflow) {
+                fecha.setCustomValidity('La fecha de la reserva no puede ser anterior a la fecha actual.');
+            }
+        });
+        fecha.addEventListener('input', () => fecha.setCustomValidity(''));
 
         cliente.addEventListener('change', () => {
             const option = cliente.options[cliente.selectedIndex];
