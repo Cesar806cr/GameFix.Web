@@ -120,8 +120,15 @@
         servicio.addEventListener('change', () => {
             const option = servicio.options[servicio.selectedIndex];
             const minutos = Number(option.dataset.duration || 0);
+            let precioTexto = String(option.dataset.price || '0').trim();
+            if (precioTexto.includes(',') && precioTexto.includes('.')) {
+                precioTexto = precioTexto.replace(/\./g, '').replace(',', '.');
+            } else if (precioTexto.includes(',')) {
+                precioTexto = precioTexto.replace(',', '.');
+            }
+            const precio = Number(precioTexto);
             document.getElementById('servicioInfo').textContent =
-                minutos > 0 ? `Duración: ${minutos} minutos. Tarifa: ₡${Number(option.dataset.price).toLocaleString('es-CR')}` :
+                minutos > 0 ? `Duración: ${minutos} minutos. Tarifa: ₡${Number.isFinite(precio) ? precio.toLocaleString('es-CR') : '0'}` :
                 'Seleccione un servicio para ver su duración.';
             cargarHoras();
         });
