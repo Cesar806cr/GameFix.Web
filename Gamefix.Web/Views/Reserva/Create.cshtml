@@ -112,9 +112,9 @@
         const horasDisponibles = document.getElementById('horasDisponibles');
         const horaInicio = document.getElementById('horaInicio');
 
-        fecha.setCustomValidity('');
+       fecha.setCustomValidity('');
         fecha.addEventListener('invalid', () => {
-            if (fecha.validity.rangeUnderflow) {
+            if (fecha.validity.rangeUnderflow) { 
                 fecha.setCustomValidity('La fecha de la reserva no puede ser anterior a la fecha actual.');
             }
         });
