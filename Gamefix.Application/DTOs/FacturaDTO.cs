@@ -44,7 +44,7 @@ public record FacturaCrearDTO
     [Required(ErrorMessage = "Seleccione un estado.")]
     [RegularExpression("Proforma|Pendiente|Pagada|Anulada",
         ErrorMessage = "Seleccione un estado válido.")]
-    public string EstadoFactura { get; set; } = "Pendiente";
+    public string EstadoFactura { get; set; } = "Proforma";
 
     public List<FacturaLineaDTO> Lineas { get; set; } = [];
 }

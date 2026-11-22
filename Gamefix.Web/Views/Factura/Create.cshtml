@@ -42,19 +42,7 @@
                 <label class="form-label">Encargado</label>
                 <input class="form-control" value="@Model.EncargadoNombre" readonly />
             </div>
-            <div class="col-md-6 form-group">
-                <label asp-for="Factura.EstadoFactura" class="form-label">Estado</label>
-                <select asp-for="Factura.EstadoFactura" class="form-select" id="estadoFactura">
-                    <option value="Pendiente" data-color="#F1C40F">Pendiente</option>
-                    <option value="Pagada" data-color="#3498DB">Pagada</option>
-                    <option value="Anulada" data-color="#E74C3C">Anulada</option>
-                    @if (Model.Factura.ReservaId.HasValue)
-                    {
-                        <option value="Proforma" data-color="#F1C40F">Proforma</option>
-                    }
-                </select>
-                <span asp-validation-for="Factura.EstadoFactura" class="text-danger"></span>
-            </div>
+            <input asp-for="Factura.EstadoFactura" type="hidden" />
         </div>
 
         <div class="maintenance-section d-flex justify-content-between align-items-center">

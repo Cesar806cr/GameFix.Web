@@ -18,7 +18,10 @@
                 <input type="hidden" name="id" value="@Model.FacturaId" />
                 <label for="estadoFactura" class="form-label mb-0">Estado</label>
                 <select id="estadoFactura" name="estado" class="form-select form-select-sm">
-                    <option value="Proforma" data-color="#F1C40F" selected="@(Model.EstadoFactura == "Proforma")">Proforma</option>
+                    @if (Model.EsProforma)
+                    {
+                        <option value="Proforma" data-color="#F1C40F" selected="@(Model.EstadoFactura == "Proforma")">Proforma</option>
+                    }
                     <option value="Pendiente" data-color="#F1C40F" selected="@(Model.EstadoFactura == "Pendiente")">Pendiente</option>
                     <option value="Pagada" data-color="#3498DB" selected="@(Model.EstadoFactura == "Pagada")">Pagada</option>
                     <option value="Anulada" data-color="#E74C3C" selected="@(Model.EstadoFactura == "Anulada")">Anulada</option>
