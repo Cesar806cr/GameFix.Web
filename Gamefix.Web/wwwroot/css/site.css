@@ -164,7 +164,7 @@ body {
   max-height: 96px;
   object-fit: contain;
 }
-
+/* Color amarillo para validaciones*/
 .text-danger {
     color: #ffc107 !important;
 }
@@ -220,4 +220,30 @@ body {
     .card:hover {
         transform: translateY(-8px) scale(1.02);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+/* 
+   ANIMACIÓN PARA LOS BOTONES
+ */
+
+.btn {
+    transition: all 0.25s ease;
+}
+
+    /* Efecto al pasar el cursor */
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 210, 255, 0.25);
+    }
+
+    /* Efecto al presionar */
+    .btn:active {
+        transform: translateY(1px) scale(0.97);
+        box-shadow: none;
+    }
+
+    /* Efecto al navegar con teclado */
+    .btn:focus-visible {
+        outline: 2px solid #00d2ff;
+        outline-offset: 3px;
     }
