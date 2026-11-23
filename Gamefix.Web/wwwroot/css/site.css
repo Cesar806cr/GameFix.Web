@@ -210,3 +210,14 @@ body {
   color: var(--bs-secondary-color);
   opacity: .65;
 }
+
+/* Animación para las cards de productos y servicios */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    /* Efecto al pasar el cursor */
+    .card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }

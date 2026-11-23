@@ -1,0 +1,85 @@
+
+REQUERIMIENTOS GENERALES de Avance 5.
+•	Se debe demostrar evidencia del uso del repositorio de GitLab por todos los miembros del equipo. De lo contrario no se revisará el Avance. OBLIGATORIO
+•	Deberá mostrarse un Video Resumen del funcionamiento del Aplicativo. De lo contrario no se revisará el Avance. OBLIGATORIO
+•	Debe contar con el consumo de un Web Services, para esto el estudiante tendrá disponibilidad para elegir la mejor opción para el proyecto.
+•	Datos precargados, más de 3 registros para cada elemento solicitado. 
+•	Toda la información que se presenta respectiva a las entidades debe provenir de datos precargados de la BD.
+•	No pinte información que no corresponda a información proveniente de la BD, si se corrobora que alguno de los aspectos solicitados, está conformado de esta forma, automáticamente se le quitara la calificación del rubro calificado. 
+•	Respete la arquitectura vista en clase. 
+•	No califica como notificación un alert de JavaScritpt.
+•	Todas las fechas y horas deben presentarse al usuario en el formato correcto al idioma de la aplicación. 
+•	Todos los valores monetarios deben presentar su respectivo signo de moneda 
+•	Toda la información presentada al usuario está en un solo idioma, con redacción y ortografía correcta. 
+•	No es permitido recargar la página durante la especificación de valores. 
+•	Cuando se solicite que al seleccionar algún elemento después se presenta cierta información, no es válido presentar toda la información dentro del listado. 
+•	La presentación de la información debe tener un diseño estructurado, ordenado, intuitivo y amigable con el usuario. 
+•	Cada aspecto solicitado debe cumplir con lo solicitado en el enunciado del proyecto y ser funcional para su respectiva revisión.  
+•	En caso de que se compruebe acción fraudulenta el avance obtendrá una nota de 1.
+•	En caso de utilizar Inteligencia Artificial, y se demuestra que el código posee más de un 40% de la exactitud de código, la nota del avance será de 1.
+•	Las preguntas demostrarán la validez del proyecto, por lo que en caso de que no conteste correctamente, se le penalizará la puntuación de la rubrica consultada.
+Durante la revisión no se permite realizar cambios en el código, solo los solicitados explícitamente por el profesor 
+A continuación, se le detalla cada uno de elementos que debe incluir en la entrega:  
+GESTION DE RESERVA 
+ 
+HISTORIAL DE CITAS 
+•	Lista de citas registradas para un encargado de su respectiva sucursal, debe presentar el estado con su respectivo color. 
+•	El encargado debe establecerse en la lógica, se debe poder cambiar y ver la información con diferentes encargados, pero el cambio debe realizarse en código. NO establezca en la interfaz el establecimiento del encargado. 
+•	Las citas se deben poder filtrar por cliente y/o fecha 
+•	De cada cita se debe poder el detalle con toda la información solicitada. 
+ 
+REGISTRAR RESERVA ENCARGADO 
+Establezca el identificador del encargado en la lógica del controlador, NO debe establecerse en la interfaz o ser seleccionada por el usuario.  
+Se debe poder registrar una reserva en su respectivo formulario, compuesta por la siguiente información: 
+•	La fecha: se debe poder seleccionar y no ser anterior a la fecha actual 
+•	Sucursal: debe presentar la sucursal del encargado, no debe ser editable. Debe presentar el nombre de la sucursal 
+•	Cliente: que solicita la cita, una vez seleccionado de forma automática se debe presentar la información respectiva del cliente: nombre completo y email 
+•	Servicio: que se solicita para la cita, al seleccionarlo debe presentarse el tiempo requerido para esté.  
+•	Hora o rango de tiempo:  o Sebe establecerlo en congruencia con el tipo de negocio y la gestión en la vida real de las citas que se gestionan  
+o	Debe respetar el tiempo establecido del servicio (horas o minutos) 
+o	Verificar que este dentro del horario establecido y que no corresponda a un bloqueo de la sucursal respectiva. 
+•	Preguntas: Deberá establecer mínimo 3 preguntas que debe llenar el cliente para registrar la cita, que sean relacionadas con el tipo de negocio.  
+•	Estado: asignar el estado respectivo, no debe ser editable. Debe presentar el color respectivo. 
+Una vez registrado debe notificar al usuario la acción. 
+ 
+CREAR PROFORMA 
+Una vez creada la cita se debe crear la Factura Proforma con las especificaciones de la cita: 
+•	Cliente: 
+•	Sucursal 
+•	Servicio: con su respectiva cantidad 
+•	Subtotal y Total: calculando el subtotal del servicio y el total de la proforma. 
+Curso: ISW-711 
+GESTION DE FACTURA 
+ 
+HISTORIAL DE FACTURAS 
+•	Lista de facturas registradas para un encargado de su respectiva sucursal, debe presentar el estado (Proforma o Facturado). 
+•	El encargado debe establecerse en la lógica, se debe poder cambiar y ver la información con diferentes encargados, pero el cambio debe realizarse en código. NO establezca en la interfaz el establecimiento del encargado. 
+•	Las facturas se deben poder filtrar por cliente y/o fecha 
+•	De cada factura se debe poder el detalle con toda la información solicitada. 
+ 
+REGISTRAR FACTURA 
+El formulario para registrar la Factura debe tener formato de factura, donde se debe identificar el encabezado con los datos generales y el detalle en una tabla con sus respectivas líneas de detalle. 
+En el encabezado del Factura debe presentarse 
+•	La fecha actual en que se registre como facturado 
+•	Sucursal: debe presentar la sucursal del encargado, no debe ser editable. Debe presentar el nombre de la sucursal 
+•	Cliente: que solicita la cita, una vez seleccionado debe presentar la información respectiva del cliente: nombre completo y email 
+•	Encargado: presentar el nombre del Encargado que está registrando la factura, no es editable. NO se selecciona en la interfaz el establecimiento del encargado. 
+En el detalle del registro del Factura se debe gestionar: 
+•	Se debe poder registrar varios productos y/o servicios en un solo registro de Factura  
+•	Especificar el producto y/o servicio: una vez seleccionado debe aparecer el precio (costo o tarifa) respectivo para esté 
+•	Especificar y cambiar el valor de la cantidad que se registra para cada línea de detalle, valide que solo se acepten números. 
+•	Debe mostrarse en tiempo real según los cambios realizados por el usuario los subtotales y total correspondiente a los cálculos solicitados 
+•	Al cambiar el producto la cantidad debe actualizar el subtotal correspondiente al cálculo del precio por la cantidad 
+•	Calcule el impuesto respectivo para cada uno de los elementos comprados y muéstrelo. 
+•	El total debe corresponder a la sumatoria de los subtotales de la Factura 
+•	Se debe poder borrar una línea de detalle, sea producto o servicio. Se debe poder borrar mediante un botón y también al establecer la cantidad en 0 para esté. 
+Una vez registrado debe notificar al usuario la acción. 
+ 
+REGISTRAR FACTURA PROFORMA 
+Cuando una factura que sea proforma se debe poder seleccionar y registrar la factura, incluyendo: 
+•	Precargar la información registrada en la proforma: 
+•	Cliente 
+•	Sucursal 
+•	Servicio: con su respectiva cantidad 
+•	Subtotal y Total: calculando el subtotal del servicio y el total de la proforma 
+•	Se puede proseguir con el registro de la factura, es decir, funcionan correctamente todos los aspectos antes mencionados en el registro de la factura. 	
