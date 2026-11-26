@@ -211,21 +211,22 @@ body {
   opacity: .65;
 }
 
-/* Animación para las cards de productos y servicios */
-.card {
+/* ANIMACIÓN PARA PRODUCTOS Y SERVICIOS*/
+
+.productos-catalogo .card,
+.servicios-catalogo .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
     /* Efecto al pasar el cursor */
-    .card:hover {
+    .productos-catalogo .card:hover,
+    .servicios-catalogo .card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 25px rgba(0, 210, 255, 0.18);
     }
 
-/* 
-   ANIMACIÓN PARA LOS BOTONES
- */
-
+/* ANIMACIÓN PARA LOS BOTONES*/
+ 
 .btn {
     transition: all 0.25s ease;
 }
